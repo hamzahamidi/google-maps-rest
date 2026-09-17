@@ -116,6 +116,16 @@
         "types": "./dist/solar/index.d.cts",
         "default": "./dist/solar/index.cjs"
       }
+    },
+    "./areainsights": {
+      "import": {
+        "types": "./dist/areainsights/index.d.ts",
+        "default": "./dist/areainsights/index.js"
+      },
+      "require": {
+        "types": "./dist/areainsights/index.d.cts",
+        "default": "./dist/areainsights/index.cjs"
+      }
     }
   },
   "typesVersions": {
@@ -143,6 +153,9 @@
       ],
       "solar": [
         "./dist/solar/index.d.ts"
+      ],
+      "areainsights": [
+        "./dist/areainsights/index.d.ts"
       ]
     }
   },
