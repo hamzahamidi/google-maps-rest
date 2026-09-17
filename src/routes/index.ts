@@ -1,5 +1,5 @@
 import type { MapsClient } from '../core/client.js';
-import type { LatLng, Open } from '../core/types.js';
+import type { Int64String, LatLng, Money, Open } from '../core/types.js';
 
 const SERVICE = 'routes';
 
@@ -46,6 +46,14 @@ export type Route = {
   polyline?: { encodedPolyline?: string };
   description?: string;
   legs?: unknown[];
+  travelAdvisory?: RouteTravelAdvisory;
+  [key: string]: unknown;
+};
+
+export type RouteTravelAdvisory = {
+  fuelConsumptionMicroliters?: Int64String;
+  transitFare?: Money;
+  tollInfo?: { estimatedPrice?: Money[] };
   [key: string]: unknown;
 };
 
@@ -63,15 +71,21 @@ export type ComputeRouteMatrixRequest = {
   units?: Units;
 };
 
+export type RouteMatrixCondition = Open<'ROUTE_MATRIX_ELEMENT_CONDITION_UNSPECIFIED' | 'ROUTE_EXISTS' | 'ROUTE_NOT_FOUND'>;
+
 export type RouteMatrixElement = {
   originIndex?: number;
   destinationIndex?: number;
   distanceMeters?: number;
   duration?: string;
-  condition?: string;
-  status?: { code?: number; message?: string };
+  condition?: RouteMatrixCondition;
+  status?: { code?: number; message?: string; details?: unknown[] };
+  travelAdvisory?: RouteTravelAdvisory;
   [key: string]: unknown;
 };
+
+/** Without these a failed element is indistinguishable from one with no route, and unmappable to its inputs. */
+const MATRIX_REQUIRED = ['originIndex', 'destinationIndex', 'status', 'condition'] as const;
 
 function rootedMask(fieldMask: readonly string[], root: string): string[] {
   return fieldMask.map((field) => (field.startsWith(`${root}.`) || field === '*' ? field : `${root}.${field}`));
@@ -100,12 +114,15 @@ export function computeRouteMatrix(
   options: { signal?: AbortSignal } = {},
 ): Promise<RouteMatrixElement[]> {
   const { fieldMask, ...body } = request;
+  const mask = [...fieldMask];
+  for (const field of MATRIX_REQUIRED) if (!mask.includes(field)) mask.push(field);
+
   return client.request<RouteMatrixElement[]>({
     service: SERVICE,
     path: '/distanceMatrix/v2:computeRouteMatrix',
     method: 'POST',
     body,
-    fieldMask,
+    fieldMask: mask,
     ...(options.signal ? { signal: options.signal } : {}),
   });
 }
