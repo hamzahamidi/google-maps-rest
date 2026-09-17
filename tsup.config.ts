@@ -10,6 +10,7 @@ export default defineConfig({
     'src/addressvalidation/index.ts',
     'src/airquality/index.ts',
     'src/pollen/index.ts',
+    'src/solar/index.ts',
   ],
   format: ['esm', 'cjs'],
   dts: true,
