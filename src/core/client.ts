@@ -57,6 +57,27 @@ export function queryOf<T extends object>(request: T): QueryInput {
   return rest as QueryInput;
 }
 
+/** AbortSignal.any landed in Node 18.17, and the engines floor is 18. */
+function anySignal(signals: AbortSignal[]): AbortSignal {
+  if (typeof AbortSignal.any === 'function') return AbortSignal.any(signals);
+
+  const controller = new AbortController();
+  const abort = (signal: AbortSignal) => () => {
+    controller.abort(signal.reason);
+    for (const [other, listener] of listeners) other.removeEventListener('abort', listener);
+  };
+  const listeners = signals.map((signal) => [signal, abort(signal)] as const);
+
+  for (const [signal, listener] of listeners) {
+    if (signal.aborted) {
+      listener();
+      return controller.signal;
+    }
+    signal.addEventListener('abort', listener, { once: true });
+  }
+  return controller.signal;
+}
+
 const DEFAULT_TIMEOUT_MS = 10_000;
 
 export class MapsClient {
@@ -83,7 +104,8 @@ export class MapsClient {
     if (spec.fieldMask?.length) headers['X-Goog-FieldMask'] = spec.fieldMask.join(',');
     if (spec.body !== undefined) headers['Content-Type'] = 'application/json';
 
-    const signal = spec.signal ?? AbortSignal.timeout(this.timeoutMs);
+    const timeout = AbortSignal.timeout(this.timeoutMs);
+    const signal = spec.signal ? anySignal([spec.signal, timeout]) : timeout;
 
     const init: RequestInit = { method: spec.method, headers, signal };
     if (spec.body !== undefined) init.body = JSON.stringify(spec.body);

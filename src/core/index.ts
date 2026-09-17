@@ -1,6 +1,7 @@
 export { MapsClient, toSearchParams, queryOf } from './client.js';
 export type { ClientOptions, FetchLike, RequestSpec, QueryInput, QueryValue } from './client.js';
 export {
+  MAPS_ERROR_STATUSES,
   MapsError,
   MapsAuthError,
   MapsQuotaError,
