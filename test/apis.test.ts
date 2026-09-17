@@ -147,3 +147,25 @@ describe('weather', () => {
     expect(calls[0]!.url).toContain('pageSize=3');
   });
 });
+
+describe('field masks never reach the query string', () => {
+  it('keeps fieldMask out of a GET url even when a request type grows one', async () => {
+    const { client, calls } = stubClient({ body: { results: [] } });
+    const request = { addressQuery: 'x', fieldMask: ['location'] } as Parameters<typeof geocodeAddress>[1];
+    await geocodeAddress(client, request);
+
+    expect(calls[0]!.url).not.toContain('fieldMask');
+    expect(calls[0]!.url).toContain('addressQuery=x');
+  });
+
+  it('does the same for weather lookups', async () => {
+    const { client, calls } = stubClient({ body: {} });
+    const request = {
+      location: { latitude: 1, longitude: 2 },
+      fieldMask: ['temperature'],
+    } as Parameters<typeof currentConditions>[1];
+    await currentConditions(client, request);
+
+    expect(calls[0]!.url).not.toContain('fieldMask');
+  });
+});

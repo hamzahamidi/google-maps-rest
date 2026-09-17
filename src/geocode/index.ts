@@ -1,4 +1,4 @@
-import type { MapsClient } from '../core/client.js';
+import { queryOf, type MapsClient } from '../core/client.js';
 import type { LatLng, Open } from '../core/types.js';
 
 const SERVICE = 'geocode';
@@ -54,7 +54,7 @@ export function geocodeAddress(
     service: SERVICE,
     path: '/v4/geocode/address',
     method: 'GET',
-    query: request as never,
+    query: queryOf(request),
     ...(options.signal ? { signal: options.signal } : {}),
   });
 }
@@ -68,7 +68,7 @@ export function geocodeLocation(
     service: SERVICE,
     path: '/v4/geocode/location',
     method: 'GET',
-    query: request as never,
+    query: queryOf(request),
     ...(options.signal ? { signal: options.signal } : {}),
   });
 }
@@ -84,7 +84,7 @@ export function geocodePlace(
     service: SERVICE,
     path: `/v4/geocode/places/${encodeURIComponent(id)}`,
     method: 'GET',
-    query: rest as never,
+    query: queryOf(rest),
     ...(options.signal ? { signal: options.signal } : {}),
   });
 }

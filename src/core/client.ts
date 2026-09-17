@@ -51,6 +51,12 @@ export function toSearchParams(query: QueryInput): URLSearchParams {
   return params;
 }
 
+/** fieldMask travels as a header, so it must never reach the query string. */
+export function queryOf<T extends object>(request: T): QueryInput {
+  const { fieldMask: _fieldMask, ...rest } = request as T & { fieldMask?: unknown };
+  return rest as QueryInput;
+}
+
 const DEFAULT_TIMEOUT_MS = 10_000;
 
 export class MapsClient {

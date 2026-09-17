@@ -1,4 +1,4 @@
-export { MapsClient, toSearchParams } from './client.js';
+export { MapsClient, toSearchParams, queryOf } from './client.js';
 export type { ClientOptions, FetchLike, RequestSpec, QueryInput, QueryValue } from './client.js';
 export {
   MapsError,

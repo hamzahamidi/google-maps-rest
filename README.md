@@ -25,15 +25,23 @@ import { searchText, getPlace, billingTierFor } from 'google-maps-rest/places';
 
 const client = createClient({ apiKey: process.env.GOOGLE_MAPS_API_KEY! });
 
-const { places } = await searchText(client, {
+const { places = [] } = await searchText(client, {
   textQuery: 'coffee in Paris',
   fieldMask: ['id', 'displayName', 'location'],
 });
 
-const place = await getPlace(client, {
-  placeId: places![0]!.id!,
-  fieldMask: ['displayName', 'formattedAddress', 'rating'],
-});
+for (const match of places) {
+  console.log(match.displayName?.text, match.location);
+}
+
+const [first] = places;
+if (first?.id) {
+  const place = await getPlace(client, {
+    placeId: first.id,
+    fieldMask: ['displayName', 'formattedAddress', 'rating'],
+  });
+  console.log(place.rating, billingTierFor(['displayName', 'rating']));
+}
 ```
 
 Each API is a subpath import, so you only bundle what you call.

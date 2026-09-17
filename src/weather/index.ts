@@ -1,4 +1,4 @@
-import type { MapsClient } from '../core/client.js';
+import { queryOf, type MapsClient } from '../core/client.js';
 import type { LatLng, Open } from '../core/types.js';
 
 const SERVICE = 'weather';
@@ -69,7 +69,7 @@ function lookup<T>(
     service: SERVICE,
     path,
     method: 'GET',
-    query: query as never,
+    query: queryOf(query),
     ...(signal ? { signal } : {}),
   });
 }
