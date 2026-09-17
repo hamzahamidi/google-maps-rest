@@ -28,29 +28,70 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./places": {
-      "types": "./dist/places/index.d.ts",
-      "import": "./dist/places/index.js",
-      "require": "./dist/places/index.cjs"
+      "import": {
+        "types": "./dist/places/index.d.ts",
+        "default": "./dist/places/index.js"
+      },
+      "require": {
+        "types": "./dist/places/index.d.cts",
+        "default": "./dist/places/index.cjs"
+      }
     },
     "./routes": {
-      "types": "./dist/routes/index.d.ts",
-      "import": "./dist/routes/index.js",
-      "require": "./dist/routes/index.cjs"
+      "import": {
+        "types": "./dist/routes/index.d.ts",
+        "default": "./dist/routes/index.js"
+      },
+      "require": {
+        "types": "./dist/routes/index.d.cts",
+        "default": "./dist/routes/index.cjs"
+      }
     },
     "./geocode": {
-      "types": "./dist/geocode/index.d.ts",
-      "import": "./dist/geocode/index.js",
-      "require": "./dist/geocode/index.cjs"
+      "import": {
+        "types": "./dist/geocode/index.d.ts",
+        "default": "./dist/geocode/index.js"
+      },
+      "require": {
+        "types": "./dist/geocode/index.d.cts",
+        "default": "./dist/geocode/index.cjs"
+      }
     },
     "./weather": {
-      "types": "./dist/weather/index.d.ts",
-      "import": "./dist/weather/index.js",
-      "require": "./dist/weather/index.cjs"
+      "import": {
+        "types": "./dist/weather/index.d.ts",
+        "default": "./dist/weather/index.js"
+      },
+      "require": {
+        "types": "./dist/weather/index.d.cts",
+        "default": "./dist/weather/index.cjs"
+      }
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "places": [
+        "./dist/places/index.d.ts"
+      ],
+      "routes": [
+        "./dist/routes/index.d.ts"
+      ],
+      "geocode": [
+        "./dist/geocode/index.d.ts"
+      ],
+      "weather": [
+        "./dist/weather/index.d.ts"
+      ]
     }
   },
   "files": [
@@ -66,12 +107,15 @@
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm run typecheck && npm run test && npm run build",
     "coverage": "vitest run --coverage",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "check:package": "publint --strict && attw --pack ."
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.2",
     "@semantic-release/github": "^12.0.9",
     "@semantic-release/npm": "^13.1.5",
     "@vitest/coverage-v8": "^3.2.7",
+    "publint": "^0.3.14",
     "semantic-release": "^25.0.9",
     "tsup": "^8.5.0",
     "typescript": "^5.9.2",
