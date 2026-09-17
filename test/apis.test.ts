@@ -56,15 +56,52 @@ describe('places', () => {
 });
 
 describe('billingTierFor', () => {
-  it('returns the highest tier present, which is the one billed', () => {
-    expect(billingTierFor(['id'])).toBe('ESSENTIALS_IDS_ONLY');
-    expect(billingTierFor(['id', 'location'])).toBe('ESSENTIALS');
-    expect(billingTierFor(['id', 'displayName'])).toBe('PRO');
-    expect(billingTierFor(['id', 'location', 'displayName', 'rating'])).toBe('ENTERPRISE');
+  it('bills the highest tier present, since that one applies to the whole call', () => {
+    expect(billingTierFor('getPlace', ['id']).tier).toBe('ESSENTIALS_IDS_ONLY');
+    expect(billingTierFor('getPlace', ['id', 'location']).tier).toBe('ESSENTIALS');
+    expect(billingTierFor('getPlace', ['id', 'displayName']).tier).toBe('PRO');
+    expect(billingTierFor('getPlace', ['id', 'location', 'rating']).tier).toBe('ENTERPRISE');
+    expect(billingTierFor('getPlace', ['id', 'reviews']).tier).toBe('ENTERPRISE_ATMOSPHERE');
+  });
+
+  it('prices the same field differently per method, which is why the method is required', () => {
+    expect(billingTierFor('getPlace', ['photos']).tier).toBe('ESSENTIALS_IDS_ONLY');
+    expect(billingTierFor('searchText', ['photos']).tier).toBe('PRO');
+
+    expect(billingTierFor('getPlace', ['location']).tier).toBe('ESSENTIALS');
+    expect(billingTierFor('searchText', ['location']).tier).toBe('PRO');
+  });
+
+  it('knows Nearby Search has no tier below Pro', () => {
+    expect(billingTierFor('searchNearby', ['id']).tier).toBe('PRO');
+    expect(billingTierFor('searchNearby', ['id', 'name', 'attributions']).tier).toBe('PRO');
+  });
+
+  it('knows Text Search has no Essentials tier', () => {
+    expect(billingTierFor('searchText', ['id']).tier).toBe('ESSENTIALS_IDS_ONLY');
+    expect(billingTierFor('searchText', ['formattedAddress']).tier).toBe('PRO');
   });
 
   it('reads through a places. prefix', () => {
-    expect(billingTierFor(['places.rating'])).toBe('ENTERPRISE');
+    expect(billingTierFor('searchText', ['places.rating']).tier).toBe('ENTERPRISE');
+  });
+
+  // Reporting an unrecognised field as the cheapest tier is the dangerous direction
+  // to be wrong in, so the caller is told rather than quietly given a low number.
+  it('reports unrecognised fields instead of pricing them as the cheapest tier', () => {
+    const estimate = billingTierFor('getPlace', ['id', 'somethingGoogleAddedLater']);
+
+    expect(estimate.unclassified).toEqual(['somethingGoogleAddedLater']);
+    expect(estimate.tier).toBe('ESSENTIALS_IDS_ONLY');
+  });
+
+  it('returns a null tier when nothing in the mask is recognised', () => {
+    expect(billingTierFor('getPlace', ['whoKnows']).tier).toBeNull();
+  });
+
+  it('bills a wildcard at the top tier the method offers', () => {
+    expect(billingTierFor('getPlace', ['*']).tier).toBe('ENTERPRISE_ATMOSPHERE');
+    expect(billingTierFor('searchNearby', ['*']).tier).toBe('ENTERPRISE_ATMOSPHERE');
   });
 });
 
