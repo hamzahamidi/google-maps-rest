@@ -126,6 +126,24 @@ describe('error mapping', () => {
     const client = new MapsClient({ apiKey: 'k', fetch: fetchImpl });
     await expect(client.request({ service: 'places', path: '/p', method: 'GET' })).rejects.toThrowError(MapsError);
   });
+
+  // A gateway can reflect the request back in its HTML, so the body must not become
+  // the message, where it would reach logs unbidden.
+  it('keeps a non-JSON body out of the message and puts it in details', async () => {
+    const body = `<html>error for ${'secret-looking-input'.repeat(20)}</html>`;
+    const fetchImpl = async () =>
+      new Response(body, { status: 502, headers: { 'Content-Type': 'text/html' } });
+    const client = new MapsClient({ apiKey: 'k', fetch: fetchImpl });
+    const error = await rejection<MapsError>(client.request({ service: 'places', path: '/p', method: 'GET' }));
+
+    expect(error.message).toBe('Request failed with HTTP 502 and a non-JSON response');
+    expect(error.message).not.toContain('secret-looking-input');
+
+    const details = error.details as { contentType: string; bodySnippet: string; bodyLength: number };
+    expect(details.contentType).toBe('text/html');
+    expect(details.bodySnippet).toHaveLength(200);
+    expect(details.bodyLength).toBe(body.length);
+  });
 });
 
 describe('abort handling', () => {

@@ -78,6 +78,22 @@ function anySignal(signals: AbortSignal[]): AbortSignal {
   return controller.signal;
 }
 
+const SNIPPET_LIMIT = 200;
+
+/** A gateway can reflect the request back in its HTML, so the body stays out of the message. */
+function nonJsonError(response: Response, text: string): MapsError {
+  return new MapsError(
+    `Request failed with HTTP ${response.status} and a non-JSON response`,
+    response.status,
+    'UNKNOWN',
+    {
+      contentType: response.headers.get('content-type'),
+      bodySnippet: text.slice(0, SNIPPET_LIMIT),
+      bodyLength: text.length,
+    },
+  );
+}
+
 const DEFAULT_TIMEOUT_MS = 10_000;
 
 export class MapsClient {
@@ -117,8 +133,7 @@ export class MapsClient {
     try {
       parsed = text ? JSON.parse(text) : {};
     } catch {
-      if (!response.ok) throw new MapsError(text.slice(0, 200), response.status, 'UNKNOWN');
-      throw new MapsError('Response was not valid JSON', response.status, 'UNKNOWN', text.slice(0, 200));
+      throw nonJsonError(response, text);
     }
 
     if (!response.ok) throw errorFromResponse(response.status, parsed);

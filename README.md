@@ -46,7 +46,7 @@ if (first?.id) {
     placeId: first.id,
     fieldMask: ['displayName', 'formattedAddress', 'rating'],
   });
-  console.log(place.rating, billingTierFor(['displayName', 'rating']));
+  console.log(place.rating, billingTierFor('getPlace', ['displayName', 'rating']));
 }
 ```
 
@@ -99,11 +99,13 @@ This package does not cover the legacy APIs. Elevation, Time Zone, Geolocation a
 
 ## Auth
 
-The API key goes in an `X-Goog-Api-Key` header on every call, never in the query string. Some Google docs show `?key=`, but the header is accepted on all of these hosts.
+The API key goes in an `X-Goog-Api-Key` header on every call, never in the query string. Some Google docs show `?key=` instead, but the two are the query and header forms of the same [system parameter](https://cloud.google.com/apis/docs/system-parameters), available across Google REST APIs.
 
 ## Errors
 
-Failed calls throw `MapsError` or one of `MapsAuthError`, `MapsQuotaError`, `MapsInvalidRequestError`. Each carries `httpStatus`, Google's `status` string, the original `message` and any `details`. `error.retryable` is true for `RESOURCE_EXHAUSTED`, `UNAVAILABLE` and `INTERNAL`.
+Failed calls throw `MapsError` or one of `MapsAuthError`, `MapsQuotaError`, `MapsInvalidRequestError`. Each carries `httpStatus`, a `status` narrowed to the canonical gRPC codes, the raw `googleStatus` Google sent, the original `message` and any `details`.
+
+`error.potentiallyRetryable` is true for `RESOURCE_EXHAUSTED`, `UNAVAILABLE`, `INTERNAL`, `DEADLINE_EXCEEDED` and `ABORTED`. It means another attempt is worth making, not that one will succeed: `RESOURCE_EXHAUSTED` covers both short throttling and a hard daily quota, and retrying the second only burns the rest of your budget.
 
 ```ts
 import { MapsQuotaError } from 'google-maps-rest';
@@ -112,7 +114,7 @@ try {
   await searchText(client, { textQuery: 'pizza', fieldMask: ['id'] });
 } catch (error) {
   if (error instanceof MapsQuotaError) {
-    // error.retryable === true
+    // error.potentiallyRetryable === true
   }
 }
 ```
