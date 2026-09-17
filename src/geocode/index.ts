@@ -1,5 +1,5 @@
 import { queryOf, type MapsClient } from '../core/client.js';
-import type { LatLng, Open } from '../core/types.js';
+import type { LatLng, Open, Rectangle } from '../core/types.js';
 
 const SERVICE = 'geocode';
 
@@ -23,20 +23,48 @@ export type GeocodeResult = {
 
 export type GeocodeResponse = { results?: GeocodeResult[] };
 
-export type GeocodeAddressRequest = {
-  addressQuery: string;
-  regionCode?: string;
+export type PostalAddress = {
+  regionCode: string;
+  addressLines: string[];
   languageCode?: string;
-  /** Biases toward this region without excluding results outside it. */
-  locationBias?: { circle?: { center: LatLng; radius: number } };
+  postalCode?: string;
+  administrativeArea?: string;
+  locality?: string;
+  sublocality?: string;
+  organization?: string;
+  recipients?: string[];
+  sortingCode?: string;
+  revision?: number;
 };
 
-export type GeocodeLocationRequest = {
-  location: LatLng;
+/** The only bias the service defines is a rectangle. There is no circle form. */
+export type GeocodeLocationBias = { rectangle: Rectangle };
+
+type GeocodeAddressCommon = {
+  regionCode?: string;
+  languageCode?: string;
+  locationBias?: GeocodeLocationBias;
+};
+
+export type GeocodeAddressRequest = GeocodeAddressCommon &
+  (
+    | { addressQuery: string; address?: never }
+    | { address: PostalAddress; addressQuery?: never }
+  );
+
+type GeocodeLocationCommon = {
   languageCode?: string;
   regionCode?: string;
-  includeTypes?: string[];
+  types?: string[];
+  granularity?: Granularity[];
 };
+
+export type GeocodeLocationRequest = GeocodeLocationCommon &
+  (
+    | { location: LatLng; locationQuery?: never }
+    /** A "lat,lng" string, for example "64.7611872,-18.4705364". */
+    | { locationQuery: string; location?: never }
+  );
 
 export type GeocodePlaceRequest = {
   /** Bare place id; the `places/` prefix is added if absent. */
