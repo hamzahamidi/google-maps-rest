@@ -1,4 +1,4 @@
-import type { LatLng, LocalizedText, Viewport, Circle, Rectangle } from '../core/types.js';
+import type { LatLng, LocalizedText, Viewport, Circle, Rectangle, Money } from '../core/types.js';
 
 import type { PlaceField } from './billing.js';
 
@@ -29,8 +29,12 @@ export type Place = {
   googleMapsUri?: string;
   businessStatus?: string;
   utcOffsetMinutes?: number;
+  priceRange?: PriceRange;
   [key: string]: unknown;
 };
+
+/** Money.units is an int64, so it arrives as a decimal string. */
+export type PriceRange = { startPrice?: Money; endPrice?: Money };
 
 export type TextMatch = { startOffset?: number; endOffset?: number };
 
@@ -97,6 +101,9 @@ export type SearchTextRequest = {
   includedType?: string;
   openNow?: boolean;
   minRating?: number;
+  pageSize?: number;
+  pageToken?: string;
+  /** @deprecated Google deprecated this in favour of pageSize, and ignores it when both are set. */
   maxResultCount?: number;
   priceLevels?: string[];
   rankPreference?: 'RELEVANCE' | 'DISTANCE';
@@ -118,3 +125,5 @@ export type SearchNearbyRequest = {
 };
 
 export type SearchResponse = { places?: Place[] };
+
+export type SearchTextResponse = SearchResponse & { nextPageToken?: string };

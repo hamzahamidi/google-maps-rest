@@ -86,8 +86,7 @@ describe('billingTierFor', () => {
     expect(billingTierFor('searchText', ['places.rating']).tier).toBe('ENTERPRISE');
   });
 
-  // Reporting an unrecognised field as the cheapest tier is the dangerous direction
-  // to be wrong in, so the caller is told rather than quietly given a low number.
+  // Pricing an unrecognised field as the cheapest tier is the dangerous way to be wrong.
   it('reports unrecognised fields instead of pricing them as the cheapest tier', () => {
     const estimate = billingTierFor('getPlace', ['id', 'somethingGoogleAddedLater']);
 
@@ -245,5 +244,31 @@ describe('field masks never reach the query string', () => {
     await currentConditions(client, request);
 
     expect(calls[0]!.url).not.toContain('fieldMask');
+  });
+});
+
+describe('places pagination', () => {
+  it('sends the Text Search page fields and surfaces the next token', async () => {
+    const { client, calls } = stubClient({ body: { places: [], nextPageToken: 'tok2' } });
+    const response = await searchText(client, {
+      textQuery: 'coffee',
+      fieldMask: ['id'],
+      pageSize: 20,
+      pageToken: 'tok1',
+    });
+
+    expect(bodyOf(calls[0]!)).toMatchObject({ pageSize: 20, pageToken: 'tok1' });
+    expect(response.nextPageToken).toBe('tok2');
+  });
+
+  it('leaves Nearby Search on maxResultCount', async () => {
+    const { client, calls } = stubClient({ body: { places: [] } });
+    await searchNearby(client, {
+      locationRestriction: { circle: { center: { latitude: 1, longitude: 2 }, radius: 100 } },
+      fieldMask: ['id'],
+      maxResultCount: 5,
+    });
+
+    expect(bodyOf(calls[0]!)).toMatchObject({ maxResultCount: 5 });
   });
 });
