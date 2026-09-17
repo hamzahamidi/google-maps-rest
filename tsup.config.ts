@@ -8,6 +8,7 @@ export default defineConfig({
     'src/geocode/index.ts',
     'src/weather/index.ts',
     'src/addressvalidation/index.ts',
+    'src/airquality/index.ts',
   ],
   format: ['esm', 'cjs'],
   dts: true,
