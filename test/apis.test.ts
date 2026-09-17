@@ -112,6 +112,47 @@ describe('geocode v4', () => {
     expect(calls[0]!.url).toContain('location.longitude=-122.08');
   });
 
+  // includeTypes is ignored rather than rejected, so the filter reads as applied.
+  it('sends the reverse lookup type filter as types', async () => {
+    const { client, calls } = stubClient({ body: { results: [] } });
+    await geocodeLocation(client, {
+      location: { latitude: 1, longitude: 2 },
+      types: ['street_address', 'premise'],
+      granularity: ['ROOFTOP'],
+    });
+
+    const url = new URL(calls[0]!.url);
+    expect(url.searchParams.getAll('types')).toEqual(['street_address', 'premise']);
+    expect(url.searchParams.getAll('granularity')).toEqual(['ROOFTOP']);
+    expect(calls[0]!.url).not.toContain('includeTypes');
+  });
+
+  it('accepts the lat,lng string form of the reverse lookup', async () => {
+    const { client, calls } = stubClient({ body: { results: [] } });
+    await geocodeLocation(client, { locationQuery: '64.7611872,-18.4705364' });
+
+    expect(calls[0]!.url).toContain('locationQuery=64.7611872%2C-18.4705364');
+  });
+
+  it('biases the address lookup by rectangle, the only form on the wire', async () => {
+    const { client, calls } = stubClient({ body: { results: [] } });
+    await geocodeAddress(client, {
+      addressQuery: 'rue de Rivoli',
+      locationBias: { rectangle: { low: { latitude: 48.8, longitude: 2.3 }, high: { latitude: 48.9, longitude: 2.4 } } },
+    });
+
+    expect(calls[0]!.url).toContain('locationBias.rectangle.low.latitude=48.8');
+    expect(calls[0]!.url).toContain('locationBias.rectangle.high.longitude=2.4');
+  });
+
+  it('accepts a structured postal address instead of a query string', async () => {
+    const { client, calls } = stubClient({ body: { results: [] } });
+    await geocodeAddress(client, { address: { regionCode: 'FR', addressLines: ['1 rue de Rivoli'] } });
+
+    expect(calls[0]!.url).toContain('address.regionCode=FR');
+    expect(calls[0]!.url).toContain('address.addressLines=1+rue+de+Rivoli');
+  });
+
   it('strips the resource prefix from a place lookup', async () => {
     const { client, calls } = stubClient({ body: { results: [] } });
     await geocodePlace(client, { placeId: 'places/xyz' });
