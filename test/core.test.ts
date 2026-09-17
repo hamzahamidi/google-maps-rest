@@ -86,7 +86,7 @@ describe('error mapping', () => {
     );
 
     expect(error).toBeInstanceOf(MapsQuotaError);
-    expect(error.retryable).toBe(true);
+    expect(error.potentiallyRetryable).toBe(true);
   });
 
   it('keeps the message Google sent', async () => {
@@ -102,12 +102,116 @@ describe('error mapping', () => {
     );
 
     expect(error.status).toBe('UNAVAILABLE');
-    expect(error.retryable).toBe(true);
+    expect(error.potentiallyRetryable).toBe(true);
+  });
+
+  it('narrows an unlisted status instead of letting it escape the union', async () => {
+    const { client } = stubClient({ status: 400, body: { error: { status: 'SOMETHING_NEW', message: 'x' } } });
+    const error = await rejection<MapsError>(client.request({ service: 'places', path: '/p', method: 'GET' }));
+
+    expect(error.status).toBe('INVALID_ARGUMENT');
+    expect(error.googleStatus).toBe('SOMETHING_NEW');
+  });
+
+  it('carries canonical codes that are not in the http fallback table', async () => {
+    const { client } = stubClient({ status: 400, body: { error: { status: 'FAILED_PRECONDITION', message: 'x' } } });
+    const error = await rejection<MapsError>(client.request({ service: 'places', path: '/p', method: 'GET' }));
+
+    expect(error.status).toBe('FAILED_PRECONDITION');
+    expect(error.potentiallyRetryable).toBe(false);
   });
 
   it('does not treat a 4xx with a non-JSON body as success', async () => {
     const fetchImpl = async () => new Response('<html>nope</html>', { status: 404 });
     const client = new MapsClient({ apiKey: 'k', fetch: fetchImpl });
     await expect(client.request({ service: 'places', path: '/p', method: 'GET' })).rejects.toThrowError(MapsError);
+  });
+});
+
+describe('abort handling', () => {
+  const hangingClient = (signal?: AbortSignal) => {
+    const client = new MapsClient({
+      apiKey: 'k',
+      timeoutMs: 40,
+      fetch: (_url, init) =>
+        new Promise((_resolve, reject) => {
+          const signal = init!.signal!;
+          if (signal.aborted) return reject(new Error('aborted'));
+          signal.addEventListener('abort', () => reject(new Error('aborted')), { once: true });
+        }),
+    });
+    return client.request({ service: 'places', path: '/p', method: 'GET', ...(signal ? { signal } : {}) });
+  };
+
+  it('times out when no caller signal is given', async () => {
+    await expect(hangingClient()).rejects.toThrow('aborted');
+  });
+
+  // A caller signal used to replace the timeout rather than join it, so passing a
+  // shutdown signal silently opted the request out of any deadline.
+  it('still times out when the caller supplies a signal that never fires', async () => {
+    const never = new AbortController();
+    await expect(hangingClient(never.signal)).rejects.toThrow('aborted');
+  });
+
+  it('aborts on the caller signal before the timeout', async () => {
+    const controller = new AbortController();
+    const pending = hangingClient(controller.signal);
+    controller.abort();
+    await expect(pending).rejects.toThrow('aborted');
+  });
+
+  it('aborts immediately on an already-aborted caller signal', async () => {
+    await expect(hangingClient(AbortSignal.abort())).rejects.toThrow();
+  });
+});
+
+// Node 18.0 to 18.16 have no AbortSignal.any, and the engines floor is 18, so the
+// fallback is the path a real user on an older runtime takes. CI never hits it.
+describe('signal combining without AbortSignal.any', () => {
+  const withoutNativeAny = async (run: () => Promise<unknown>) => {
+    const native = AbortSignal.any;
+    Reflect.deleteProperty(AbortSignal, 'any');
+    try {
+      await run();
+    } finally {
+      Object.defineProperty(AbortSignal, 'any', { value: native, configurable: true, writable: true });
+    }
+  };
+
+  const hanging = (signal: AbortSignal, timeoutMs = 40) => {
+    const client = new MapsClient({
+      apiKey: 'k',
+      timeoutMs,
+      fetch: (_url, init) =>
+        new Promise((_resolve, reject) => {
+          const s = init!.signal!;
+          if (s.aborted) return reject(new Error('aborted'));
+          s.addEventListener('abort', () => reject(new Error('aborted')), { once: true });
+        }),
+    });
+    return client.request({ service: 'places', path: '/p', method: 'GET', signal });
+  };
+
+  it('falls back to a manual combine and still honours the timeout', async () => {
+    await withoutNativeAny(async () => {
+      const never = new AbortController();
+      await expect(hanging(never.signal)).rejects.toThrow('aborted');
+    });
+  });
+
+  it('falls back and still honours the caller signal', async () => {
+    await withoutNativeAny(async () => {
+      const controller = new AbortController();
+      const pending = hanging(controller.signal, 10_000);
+      controller.abort();
+      await expect(pending).rejects.toThrow('aborted');
+    });
+  });
+
+  it('falls back and handles an already-aborted caller signal', async () => {
+    await withoutNativeAny(async () => {
+      await expect(hanging(AbortSignal.abort(), 10_000)).rejects.toThrow('aborted');
+    });
   });
 });
