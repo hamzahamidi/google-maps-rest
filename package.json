@@ -76,6 +76,16 @@
         "types": "./dist/weather/index.d.cts",
         "default": "./dist/weather/index.cjs"
       }
+    },
+    "./addressvalidation": {
+      "import": {
+        "types": "./dist/addressvalidation/index.d.ts",
+        "default": "./dist/addressvalidation/index.js"
+      },
+      "require": {
+        "types": "./dist/addressvalidation/index.d.cts",
+        "default": "./dist/addressvalidation/index.cjs"
+      }
     }
   },
   "typesVersions": {
@@ -91,6 +101,9 @@
       ],
       "weather": [
         "./dist/weather/index.d.ts"
+      ],
+      "addressvalidation": [
+        "./dist/addressvalidation/index.d.ts"
       ]
     }
   },
