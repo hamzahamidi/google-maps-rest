@@ -96,6 +96,16 @@
         "types": "./dist/airquality/index.d.cts",
         "default": "./dist/airquality/index.cjs"
       }
+    },
+    "./pollen": {
+      "import": {
+        "types": "./dist/pollen/index.d.ts",
+        "default": "./dist/pollen/index.js"
+      },
+      "require": {
+        "types": "./dist/pollen/index.d.cts",
+        "default": "./dist/pollen/index.cjs"
+      }
     }
   },
   "typesVersions": {
@@ -117,6 +127,9 @@
       ],
       "airquality": [
         "./dist/airquality/index.d.ts"
+      ],
+      "pollen": [
+        "./dist/pollen/index.d.ts"
       ]
     }
   },
