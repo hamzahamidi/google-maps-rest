@@ -1,56 +1,10 @@
 import type { LatLng, LocalizedText, Viewport, Circle, Rectangle } from '../core/types.js';
 
-/**
- * Billing tier is decided by the highest-tier field present in the mask.
- * https://developers.google.com/maps/documentation/places/web-service/usage-and-billing
- */
-export const ESSENTIALS_IDS_ONLY_FIELDS = ['id', 'name', 'photos', 'attributions'] as const;
+import type { PlaceField } from './billing.js';
 
-export const ESSENTIALS_FIELDS = [
-  'addressComponents',
-  'adrFormatAddress',
-  'formattedAddress',
-  'location',
-  'plusCode',
-  'postalAddress',
-  'shortFormattedAddress',
-  'types',
-  'viewport',
-] as const;
-
-export const PRO_FIELDS = [
-  'accessibilityOptions',
-  'businessStatus',
-  'displayName',
-  'googleMapsUri',
-  'primaryType',
-  'primaryTypeDisplayName',
-  'pureServiceAreaBusiness',
-  'subDestinations',
-  'utcOffsetMinutes',
-] as const;
-
-export const ENTERPRISE_FIELDS = [
-  'currentOpeningHours',
-  'internationalPhoneNumber',
-  'nationalPhoneNumber',
-  'priceLevel',
-  'priceRange',
-  'rating',
-  'regularOpeningHours',
-  'userRatingCount',
-  'websiteUri',
-] as const;
-
-export type PlaceField =
-  | (typeof ESSENTIALS_IDS_ONLY_FIELDS)[number]
-  | (typeof ESSENTIALS_FIELDS)[number]
-  | (typeof PRO_FIELDS)[number]
-  | (typeof ENTERPRISE_FIELDS)[number];
+export type { PlaceField };
 
 export type FieldMaskEntry = PlaceField | (string & {});
-
-export type BillingTier = 'ESSENTIALS_IDS_ONLY' | 'ESSENTIALS' | 'PRO' | 'ENTERPRISE';
 
 export type AddressComponent = {
   longText?: string;

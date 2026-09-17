@@ -69,7 +69,17 @@ Places and Routes require `X-Goog-FieldMask`, and the mask decides the billed SK
 | `computeRoutes` | `['duration']` | `routes.duration` |
 | `computeRouteMatrix` | `['duration']` | `duration` |
 
-`billingTierFor(mask)` returns the tier that mask bills at, since the highest tier present applies to the whole call.
+`billingTierFor(method, mask)` returns the tier that mask bills at, since the highest tier present applies to the whole call. The method is required because the same field is priced differently per call: `photos` is IDs Only on `getPlace` and Pro on `searchText`, and Nearby Search has no tier below Pro at all.
+
+```ts
+billingTierFor('getPlace', ['id', 'photos']);
+// { tier: 'ESSENTIALS_IDS_ONLY', unclassified: [] }
+
+billingTierFor('searchText', ['id', 'photos']);
+// { tier: 'PRO', unclassified: [] }
+```
+
+A field Google has added since these tables were written comes back in `unclassified` rather than being priced as the cheapest tier, so `tier` is a lower bound whenever that array is not empty.
 
 ## Coverage
 

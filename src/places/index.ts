@@ -1,20 +1,17 @@
 import type { MapsClient } from '../core/client.js';
-import {
-  ENTERPRISE_FIELDS,
-  PRO_FIELDS,
-  ESSENTIALS_FIELDS,
-  type AutocompleteRequest,
-  type AutocompleteResponse,
-  type BillingTier,
-  type FieldMaskEntry,
-  type GetPlaceRequest,
-  type Place,
-  type SearchNearbyRequest,
-  type SearchResponse,
-  type SearchTextRequest,
+import type {
+  AutocompleteRequest,
+  AutocompleteResponse,
+  FieldMaskEntry,
+  GetPlaceRequest,
+  Place,
+  SearchNearbyRequest,
+  SearchResponse,
+  SearchTextRequest,
 } from './types.js';
 
 export * from './types.js';
+export * from './billing.js';
 
 const SERVICE = 'places';
 
@@ -84,17 +81,4 @@ export function searchNearby(
     fieldMask: searchMask(fieldMask),
     ...(options.signal ? { signal: options.signal } : {}),
   });
-}
-
-const ENTERPRISE = new Set<string>(ENTERPRISE_FIELDS);
-const PRO = new Set<string>(PRO_FIELDS);
-const ESSENTIALS = new Set<string>(ESSENTIALS_FIELDS);
-
-/** The highest tier present in the mask is the one billed for the whole call. */
-export function billingTierFor(fieldMask: readonly FieldMaskEntry[]): BillingTier {
-  const bare = fieldMask.map((field) => (field.startsWith('places.') ? field.slice('places.'.length) : field));
-  if (bare.some((field) => ENTERPRISE.has(field))) return 'ENTERPRISE';
-  if (bare.some((field) => PRO.has(field))) return 'PRO';
-  if (bare.some((field) => ESSENTIALS.has(field))) return 'ESSENTIALS';
-  return 'ESSENTIALS_IDS_ONLY';
 }
