@@ -123,11 +123,38 @@ describe('routes', () => {
     await computeRouteMatrix(client, {
       origins: [{ waypoint: { address: 'a' } }],
       destinations: [{ waypoint: { address: 'b' } }],
-      fieldMask: ['originIndex', 'duration'],
+      fieldMask: ['duration'],
     });
 
     expect(calls[0]!.url).toContain('/distanceMatrix/v2:computeRouteMatrix');
-    expect(headerOf(calls[0]!, 'X-Goog-FieldMask')).toBe('originIndex,duration');
+    expect(headerOf(calls[0]!, 'X-Goog-FieldMask')).toContain('duration');
+    expect(headerOf(calls[0]!, 'X-Goog-FieldMask')).not.toContain('routes.');
+  });
+
+  // Without the indexes an element cannot be mapped back to its inputs, and without
+  // status a failed element reads the same as one that simply has no route.
+  it('always asks for the matrix diagnostic and index fields', async () => {
+    const { client, calls } = stubClient({ body: [] });
+    await computeRouteMatrix(client, {
+      origins: [{ waypoint: { address: 'a' } }],
+      destinations: [{ waypoint: { address: 'b' } }],
+      fieldMask: ['duration'],
+    });
+
+    const mask = headerOf(calls[0]!, 'X-Goog-FieldMask')!.split(',');
+    expect(mask).toEqual(['duration', 'originIndex', 'destinationIndex', 'status', 'condition']);
+  });
+
+  it('does not duplicate a diagnostic field the caller already asked for', async () => {
+    const { client, calls } = stubClient({ body: [] });
+    await computeRouteMatrix(client, {
+      origins: [{ waypoint: { address: 'a' } }],
+      destinations: [{ waypoint: { address: 'b' } }],
+      fieldMask: ['status', 'duration'],
+    });
+
+    const mask = headerOf(calls[0]!, 'X-Goog-FieldMask')!.split(',');
+    expect(mask.filter((f) => f === 'status')).toHaveLength(1);
   });
 });
 
