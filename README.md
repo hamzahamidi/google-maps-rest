@@ -81,8 +81,9 @@ Places and Routes require `X-Goog-FieldMask`, and the mask decides the billed SK
 | Weather | `weather.googleapis.com` | `currentConditions`, `forecastDays`, `forecastHours`, `historyHours` |
 | Address Validation | `addressvalidation.googleapis.com` | `validateAddress`, `provideValidationFeedback` |
 | Air Quality | `airquality.googleapis.com` | `currentConditions`, `forecast`, `history` |
+| Pollen | `pollen.googleapis.com` | `forecast` |
 
-Not yet implemented: Pollen, Solar, Area Insights. They share the same transport and auth, so each is a types file and a handful of functions.
+Not yet implemented: Solar, Area Insights. They share the same transport and auth, so each is a types file and a handful of functions.
 
 This package does not cover the legacy APIs. Elevation, Time Zone, Geolocation and the legacy Places, Directions and Distance Matrix endpoints use `?key=` query auth against `maps.googleapis.com`. Use [`@googlemaps/google-maps-services-js`](https://github.com/googlemaps/google-maps-services-js) for those.
 
