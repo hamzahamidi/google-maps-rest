@@ -86,6 +86,16 @@
         "types": "./dist/addressvalidation/index.d.cts",
         "default": "./dist/addressvalidation/index.cjs"
       }
+    },
+    "./airquality": {
+      "import": {
+        "types": "./dist/airquality/index.d.ts",
+        "default": "./dist/airquality/index.js"
+      },
+      "require": {
+        "types": "./dist/airquality/index.d.cts",
+        "default": "./dist/airquality/index.cjs"
+      }
     }
   },
   "typesVersions": {
@@ -104,6 +114,9 @@
       ],
       "addressvalidation": [
         "./dist/addressvalidation/index.d.ts"
+      ],
+      "airquality": [
+        "./dist/airquality/index.d.ts"
       ]
     }
   },
