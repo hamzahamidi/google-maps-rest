@@ -1,0 +1,64 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write
+
+# Two jobs rather than one, because they need different gating. The dry run stays
+# ungated or every pull request would wait on a human to learn whether its
+# configuration parses. The publish is gated, because a push to main publishes to
+# npm irreversibly: unpublishing is limited to 72 hours and only while nothing
+# depends on the version.
+jobs:
+  dry-run:
+    name: Dry run
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npm run build
+      # semantic-release's own isPr guard returns before verifyConditions, so on a
+      # pull request it exits before it reaches npm authentication. This catches
+      # configuration and plugin errors only. It does not prove OIDC publishing works.
+      - run: npx semantic-release --dry-run
+
+  release:
+    name: Release
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    # This name must exist as an environment with required reviewers under
+    # Settings, Environments. GitHub creates an unprotected environment on first
+    # use if it does not, which gates nothing at all.
+    environment: npm-publish
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      # Node 22 ships npm 10, and Trusted Publishing needs npm 11.5.1 or later.
+      - run: npm install -g npm@latest
+      - run: npm ci
+      - run: npm run build
+      - env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release

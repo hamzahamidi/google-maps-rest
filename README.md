@@ -1,5 +1,11 @@
 # google-maps-rest
 
+[![CI](https://github.com/hamzahamidi/google-maps-rest/actions/workflows/ci.yml/badge.svg)](https://github.com/hamzahamidi/google-maps-rest/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/hamzahamidi/google-maps-rest/branch/main/graph/badge.svg)](https://codecov.io/gh/hamzahamidi/google-maps-rest)
+[![npm](https://img.shields.io/npm/v/google-maps-rest)](https://www.npmjs.com/package/google-maps-rest)
+[![install size](https://packagephobia.com/badge?p=google-maps-rest)](https://packagephobia.com/result?p=google-maps-rest)
+[![License](https://img.shields.io/npm/l/google-maps-rest)](LICENSE)
+
 Google's new Maps APIs each ship their own npm package, and every one is generated on `google-gax`. gRPC is the default transport in Node, and the install carries `@grpc/grpc-js`, `protobufjs` and `google-auth-library`: 36 MB for one API.
 
 Every one of these APIs is REST/JSON over HTTPS, and every RPC declares its own REST route in Google's public service definitions. This package calls those routes directly. 56 kB, no runtime dependencies.

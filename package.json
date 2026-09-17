@@ -1,6 +1,6 @@
 {
   "name": "google-maps-rest",
-  "version": "0.1.0",
+  "version": "0.0.0-development",
   "description": "Tiny dependency-free REST client for the new Google Maps Platform APIs. Native fetch, typed field masks, no gRPC.",
   "keywords": [
     "google-maps",
@@ -64,9 +64,15 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run typecheck && npm run test && npm run build"
+    "prepublishOnly": "npm run typecheck && npm run test && npm run build",
+    "coverage": "vitest run --coverage",
+    "semantic-release": "semantic-release"
   },
   "devDependencies": {
+    "@semantic-release/github": "^12.0.9",
+    "@semantic-release/npm": "^13.1.5",
+    "@vitest/coverage-v8": "^3.2.7",
+    "semantic-release": "^25.0.9",
     "tsup": "^8.5.0",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
