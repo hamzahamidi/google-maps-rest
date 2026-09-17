@@ -1,0 +1,74 @@
+{
+  "name": "google-maps-rest",
+  "version": "0.1.0",
+  "description": "Tiny dependency-free REST client for the new Google Maps Platform APIs. Native fetch, typed field masks, no gRPC.",
+  "keywords": [
+    "google-maps",
+    "maps-platform",
+    "places-api",
+    "routes-api",
+    "geocoding",
+    "weather-api",
+    "field-mask",
+    "rest",
+    "fetch"
+  ],
+  "license": "MIT",
+  "author": "Hamza Hamidi",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hamzahamidi/google-maps-rest.git"
+  },
+  "homepage": "https://github.com/hamzahamidi/google-maps-rest#readme",
+  "bugs": "https://github.com/hamzahamidi/google-maps-rest/issues",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./places": {
+      "types": "./dist/places/index.d.ts",
+      "import": "./dist/places/index.js",
+      "require": "./dist/places/index.cjs"
+    },
+    "./routes": {
+      "types": "./dist/routes/index.d.ts",
+      "import": "./dist/routes/index.js",
+      "require": "./dist/routes/index.cjs"
+    },
+    "./geocode": {
+      "types": "./dist/geocode/index.d.ts",
+      "import": "./dist/geocode/index.js",
+      "require": "./dist/geocode/index.cjs"
+    },
+    "./weather": {
+      "types": "./dist/weather/index.d.ts",
+      "import": "./dist/weather/index.js",
+      "require": "./dist/weather/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm run test && npm run build"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  }
+}
