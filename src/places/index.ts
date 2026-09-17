@@ -8,6 +8,7 @@ import type {
   SearchNearbyRequest,
   SearchResponse,
   SearchTextRequest,
+  SearchTextResponse,
 } from './types.js';
 
 export * from './types.js';
@@ -55,9 +56,9 @@ export function searchText(
   client: MapsClient,
   request: SearchTextRequest,
   options: { signal?: AbortSignal } = {},
-): Promise<SearchResponse> {
+): Promise<SearchTextResponse> {
   const { fieldMask, ...body } = request;
-  return client.request<SearchResponse>({
+  return client.request<SearchTextResponse>({
     service: SERVICE,
     path: '/v1/places:searchText',
     method: 'POST',

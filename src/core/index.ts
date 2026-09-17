@@ -8,4 +8,4 @@ export {
   errorFromResponse,
 } from './errors.js';
 export type { MapsErrorStatus } from './errors.js';
-export type { LatLng, LocalizedText, Viewport, Circle, Rectangle, Open } from './types.js';
+export type { LatLng, LocalizedText, Viewport, Circle, Rectangle, Open, Int64String, Money } from './types.js';
