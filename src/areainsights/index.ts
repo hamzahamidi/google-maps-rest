@@ -1,5 +1,5 @@
 import type { MapsClient } from '../core/client.js';
-import type { Circle, LatLng, Open } from '../core/types.js';
+import type { LatLng, Open } from '../core/types.js';
 
 const SERVICE = 'areainsights';
 
@@ -13,11 +13,18 @@ export type PriceLevel = Open<
   'PRICE_LEVEL_UNSPECIFIED' | 'PRICE_LEVEL_FREE' | 'PRICE_LEVEL_INEXPENSIVE' | 'PRICE_LEVEL_MODERATE' | 'PRICE_LEVEL_EXPENSIVE' | 'PRICE_LEVEL_VERY_EXPENSIVE'
 >;
 
-export type LocationFilter = {
-  circle?: Circle & { place?: string };
-  region?: { place: string };
-  customArea?: { polygon: { coordinates: LatLng[] } };
+/**
+ * This is not the Places circle. Area Insights puts the centre flat on the object
+ * as a latLng or place oneof, with no `center` wrapper.
+ */
+export type AreaCircle = ({ latLng: LatLng; place?: never } | { place: string; latLng?: never }) & {
+  radius?: number;
 };
+
+export type LocationFilter =
+  | { circle: AreaCircle; region?: never; customArea?: never }
+  | { region: { place: string }; circle?: never; customArea?: never }
+  | { customArea: { polygon: { coordinates: LatLng[] } }; circle?: never; region?: never };
 
 export type TypeFilter = { includedTypes?: string[]; excludedTypes?: string[]; includedPrimaryTypes?: string[]; excludedPrimaryTypes?: string[] };
 
