@@ -131,9 +131,11 @@ GOOGLE_MAPS_API_KEY=... npm run discovery:fetch -- routes geocode
 
 The key travels in a header and is not recorded. A weekly workflow refetches the pinned documents and opens an issue when a method, parameter, request or response field, or enum changes, and closes it once the pinned documents match again.
 
-## Status
+## Versioning
 
-Version 0.1.0. The API surface may change before 1.0. Nothing here has run against a production workload yet.
+Semantic versioning. A major release is any change a consumer can observe: an exported type or function signature, an error class, a subpath entry, the wire shape a call produces, or the Node floor (18). A minor release adds calls, request fields or exports. A patch changes nothing observable.
+
+A field Google adds to a response is not a breaking change: the JSON passes through untouched, and a minor release declares it. Enum-like strings are typed `Open<T>`, so a new enum value arrives without a release. A request field Google adds appears in a minor release once the pinned Discovery document carries it.
 
 ## License
 
