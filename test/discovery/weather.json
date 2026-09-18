@@ -1,0 +1,2071 @@
+{
+  "name": "weather",
+  "parameters": {
+    "$.xgafv": {
+      "description": "V1 error format.",
+      "enum": [
+        "1",
+        "2"
+      ],
+      "enumDescriptions": [
+        "v1 error format",
+        "v2 error format"
+      ],
+      "location": "query",
+      "type": "string"
+    },
+    "access_token": {
+      "description": "OAuth access token.",
+      "location": "query",
+      "type": "string"
+    },
+    "alt": {
+      "default": "json",
+      "description": "Data format for response.",
+      "enum": [
+        "json",
+        "media",
+        "proto"
+      ],
+      "enumDescriptions": [
+        "Responses with Content-Type of application/json",
+        "Media download with context-dependent Content-Type",
+        "Responses with Content-Type of application/x-protobuf"
+      ],
+      "location": "query",
+      "type": "string"
+    },
+    "callback": {
+      "description": "JSONP",
+      "location": "query",
+      "type": "string"
+    },
+    "fields": {
+      "description": "Selector specifying which fields to include in a partial response.",
+      "location": "query",
+      "type": "string"
+    },
+    "key": {
+      "description": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+      "location": "query",
+      "type": "string"
+    },
+    "oauth_token": {
+      "description": "OAuth 2.0 token for the current user.",
+      "location": "query",
+      "type": "string"
+    },
+    "prettyPrint": {
+      "default": "true",
+      "description": "Returns response with indentations and line breaks.",
+      "location": "query",
+      "type": "boolean"
+    },
+    "quotaUser": {
+      "description": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
+      "location": "query",
+      "type": "string"
+    },
+    "uploadType": {
+      "description": "Legacy upload protocol for media (e.g. \"media\", \"multipart\").",
+      "location": "query",
+      "type": "string"
+    },
+    "upload_protocol": {
+      "description": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
+      "location": "query",
+      "type": "string"
+    }
+  },
+  "resources": {
+    "currentConditions": {
+      "methods": {
+        "lookup": {
+          "description": "Returns the current weather conditions at a given location.",
+          "flatPath": "v1/currentConditions:lookup",
+          "httpMethod": "GET",
+          "id": "weather.currentConditions.lookup",
+          "parameterOrder": [],
+          "parameters": {
+            "languageCode": {
+              "description": "Optional. Allows the client to choose the language for the response. If data cannot be provided for that language, the API uses the closest match. Allowed values rely on the IETF BCP-47 standard. The default value is \"en\".",
+              "location": "query",
+              "type": "string"
+            },
+            "location.latitude": {
+              "description": "The latitude in degrees. It must be in the range [-90.0, +90.0].",
+              "format": "double",
+              "location": "query",
+              "type": "number"
+            },
+            "location.longitude": {
+              "description": "The longitude in degrees. It must be in the range [-180.0, +180.0].",
+              "format": "double",
+              "location": "query",
+              "type": "number"
+            },
+            "unitsSystem": {
+              "description": "Optional. The units system to use for the returned weather conditions. If not provided, the returned weather conditions will be in the metric system (default = METRIC).",
+              "enum": [
+                "UNITS_SYSTEM_UNSPECIFIED",
+                "IMPERIAL",
+                "METRIC"
+              ],
+              "enumDescriptions": [
+                "The units system is unspecified.",
+                "The imperial units system (e.g. Fahrenheit, miles, etc).",
+                "The metric units system (e.g. Celsius, kilometers, etc)."
+              ],
+              "location": "query",
+              "type": "string"
+            }
+          },
+          "path": "v1/currentConditions:lookup",
+          "response": {
+            "$ref": "LookupCurrentConditionsResponse"
+          },
+          "scopes": [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ]
+        }
+      }
+    },
+    "forecast": {
+      "resources": {
+        "days": {
+          "methods": {
+            "lookup": {
+              "description": "Returns up to 10 days of daily forecasts at a given location, starting from the current day.",
+              "flatPath": "v1/forecast/days:lookup",
+              "httpMethod": "GET",
+              "id": "weather.forecast.days.lookup",
+              "parameterOrder": [],
+              "parameters": {
+                "days": {
+                  "description": "Optional. Limits the amount of total days to fetch starting from the current day - a value from 1 to 10 (inclusive). The default value is the maximum allowed value of 10.",
+                  "format": "int32",
+                  "location": "query",
+                  "type": "integer"
+                },
+                "languageCode": {
+                  "description": "Optional. Allows the client to choose the language for the response. If data cannot be provided for that language, the API uses the closest match. Allowed values rely on the IETF BCP-47 standard. The default value is \"en\".",
+                  "location": "query",
+                  "type": "string"
+                },
+                "location.latitude": {
+                  "description": "The latitude in degrees. It must be in the range [-90.0, +90.0].",
+                  "format": "double",
+                  "location": "query",
+                  "type": "number"
+                },
+                "location.longitude": {
+                  "description": "The longitude in degrees. It must be in the range [-180.0, +180.0].",
+                  "format": "double",
+                  "location": "query",
+                  "type": "number"
+                },
+                "pageSize": {
+                  "description": "Optional. The maximum number of daily forecast records to return per page - a value from 1 to 10 (inclusive). The default value is 5.",
+                  "format": "int32",
+                  "location": "query",
+                  "type": "integer"
+                },
+                "pageToken": {
+                  "description": "Optional. A page token received from a previous request. It is used to retrieve the subsequent page.",
+                  "location": "query",
+                  "type": "string"
+                },
+                "unitsSystem": {
+                  "description": "Optional. The units system to use for the returned weather conditions. If not provided, the returned weather conditions will be in the metric system (default = METRIC).",
+                  "enum": [
+                    "UNITS_SYSTEM_UNSPECIFIED",
+                    "IMPERIAL",
+                    "METRIC"
+                  ],
+                  "enumDescriptions": [
+                    "The units system is unspecified.",
+                    "The imperial units system (e.g. Fahrenheit, miles, etc).",
+                    "The metric units system (e.g. Celsius, kilometers, etc)."
+                  ],
+                  "location": "query",
+                  "type": "string"
+                }
+              },
+              "path": "v1/forecast/days:lookup",
+              "response": {
+                "$ref": "LookupForecastDaysResponse"
+              },
+              "scopes": [
+                "https://www.googleapis.com/auth/cloud-platform"
+              ]
+            }
+          }
+        },
+        "hours": {
+          "methods": {
+            "lookup": {
+              "description": "Returns up to 240 hours of hourly forecasts at a given location, starting from the current hour.",
+              "flatPath": "v1/forecast/hours:lookup",
+              "httpMethod": "GET",
+              "id": "weather.forecast.hours.lookup",
+              "parameterOrder": [],
+              "parameters": {
+                "hours": {
+                  "description": "Optional. Limits the amount of total hours to fetch starting from the current hour - a value from 1 to 240 (inclusive). The default is the maximum allowed value of 240.",
+                  "format": "int32",
+                  "location": "query",
+                  "type": "integer"
+                },
+                "languageCode": {
+                  "description": "Optional. Allows the client to choose the language for the response. If data cannot be provided for that language, the API uses the closest match. Allowed values rely on the IETF BCP-47 standard. The default value is \"en\".",
+                  "location": "query",
+                  "type": "string"
+                },
+                "location.latitude": {
+                  "description": "The latitude in degrees. It must be in the range [-90.0, +90.0].",
+                  "format": "double",
+                  "location": "query",
+                  "type": "number"
+                },
+                "location.longitude": {
+                  "description": "The longitude in degrees. It must be in the range [-180.0, +180.0].",
+                  "format": "double",
+                  "location": "query",
+                  "type": "number"
+                },
+                "pageSize": {
+                  "description": "Optional. The maximum number of hourly forecast records to return per page - a value from 1 to 24 (inclusive). The default is the maximum allowed value of 24.",
+                  "format": "int32",
+                  "location": "query",
+                  "type": "integer"
+                },
+                "pageToken": {
+                  "description": "Optional. A page token received from a previous request. It is used to retrieve the subsequent page.",
+                  "location": "query",
+                  "type": "string"
+                },
+                "unitsSystem": {
+                  "description": "Optional. The units system to use for the returned weather conditions. If not provided, the returned weather conditions will be in the metric system (default = METRIC).",
+                  "enum": [
+                    "UNITS_SYSTEM_UNSPECIFIED",
+                    "IMPERIAL",
+                    "METRIC"
+                  ],
+                  "enumDescriptions": [
+                    "The units system is unspecified.",
+                    "The imperial units system (e.g. Fahrenheit, miles, etc).",
+                    "The metric units system (e.g. Celsius, kilometers, etc)."
+                  ],
+                  "location": "query",
+                  "type": "string"
+                }
+              },
+              "path": "v1/forecast/hours:lookup",
+              "response": {
+                "$ref": "LookupForecastHoursResponse"
+              },
+              "scopes": [
+                "https://www.googleapis.com/auth/cloud-platform"
+              ]
+            }
+          }
+        },
+        "minutes": {
+          "methods": {
+            "lookup": {
+              "description": "Returns minute-level precipitation nowcast events for up to 6 hours.",
+              "flatPath": "v1/forecast/minutes:lookup",
+              "httpMethod": "GET",
+              "id": "weather.forecast.minutes.lookup",
+              "parameterOrder": [],
+              "parameters": {
+                "location.latitude": {
+                  "description": "The latitude in degrees. It must be in the range [-90.0, +90.0].",
+                  "format": "double",
+                  "location": "query",
+                  "type": "number"
+                },
+                "location.longitude": {
+                  "description": "The longitude in degrees. It must be in the range [-180.0, +180.0].",
+                  "format": "double",
+                  "location": "query",
+                  "type": "number"
+                },
+                "pageSize": {
+                  "description": "Optional. The maximum number of forecast records to return per page.",
+                  "format": "int32",
+                  "location": "query",
+                  "type": "integer"
+                },
+                "pageToken": {
+                  "description": "Optional. A page token received from a previous request. It is used to retrieve the subsequent page.",
+                  "location": "query",
+                  "type": "string"
+                },
+                "unitsSystem": {
+                  "description": "Optional. The units system to use for the returned weather conditions. If not provided, the returned weather conditions will be in the metric system (default = METRIC).",
+                  "enum": [
+                    "UNITS_SYSTEM_UNSPECIFIED",
+                    "IMPERIAL",
+                    "METRIC"
+                  ],
+                  "enumDescriptions": [
+                    "The units system is unspecified.",
+                    "The imperial units system (e.g. Fahrenheit, miles, etc).",
+                    "The metric units system (e.g. Celsius, kilometers, etc)."
+                  ],
+                  "location": "query",
+                  "type": "string"
+                }
+              },
+              "path": "v1/forecast/minutes:lookup",
+              "response": {
+                "$ref": "LookupForecastMinutesResponse"
+              },
+              "scopes": [
+                "https://www.googleapis.com/auth/cloud-platform"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "history": {
+      "resources": {
+        "hours": {
+          "methods": {
+            "lookup": {
+              "description": "Returns up to 24 hours of hourly historical weather data at a given location, starting from the last hour.",
+              "flatPath": "v1/history/hours:lookup",
+              "httpMethod": "GET",
+              "id": "weather.history.hours.lookup",
+              "parameterOrder": [],
+              "parameters": {
+                "hours": {
+                  "description": "Optional. Limits the amount of total hours to fetch starting from the last hour - a from 1 to 24 (inclusive). The default is the maximum allowed value of 24.",
+                  "format": "int32",
+                  "location": "query",
+                  "type": "integer"
+                },
+                "languageCode": {
+                  "description": "Optional. Allows the client to choose the language for the response. If data cannot be provided for that language, the API uses the closest match. Allowed values rely on the IETF BCP-47 standard. The default value is \"en\".",
+                  "location": "query",
+                  "type": "string"
+                },
+                "location.latitude": {
+                  "description": "The latitude in degrees. It must be in the range [-90.0, +90.0].",
+                  "format": "double",
+                  "location": "query",
+                  "type": "number"
+                },
+                "location.longitude": {
+                  "description": "The longitude in degrees. It must be in the range [-180.0, +180.0].",
+                  "format": "double",
+                  "location": "query",
+                  "type": "number"
+                },
+                "pageSize": {
+                  "description": "Optional. The maximum number of hourly historical records to return per page - a value from 1 to 24 (inclusive). The default is the maximum allowed value of 24.",
+                  "format": "int32",
+                  "location": "query",
+                  "type": "integer"
+                },
+                "pageToken": {
+                  "description": "Optional. A page token received from a previous request. It is used to retrieve the subsequent page.",
+                  "location": "query",
+                  "type": "string"
+                },
+                "unitsSystem": {
+                  "description": "Optional. The units system to use for the returned weather conditions. If not provided, the returned weather conditions will be in the metric system (default = METRIC).",
+                  "enum": [
+                    "UNITS_SYSTEM_UNSPECIFIED",
+                    "IMPERIAL",
+                    "METRIC"
+                  ],
+                  "enumDescriptions": [
+                    "The units system is unspecified.",
+                    "The imperial units system (e.g. Fahrenheit, miles, etc).",
+                    "The metric units system (e.g. Celsius, kilometers, etc)."
+                  ],
+                  "location": "query",
+                  "type": "string"
+                }
+              },
+              "path": "v1/history/hours:lookup",
+              "response": {
+                "$ref": "LookupHistoryHoursResponse"
+              },
+              "scopes": [
+                "https://www.googleapis.com/auth/cloud-platform"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "mapTypes": {
+      "resources": {
+        "mapTiles": {
+          "methods": {
+            "lookupMapTile": {
+              "description": "Returns weather maps for a given location.",
+              "flatPath": "v1/mapTypes/{mapType}/mapTiles/{zoom}/{x}/{y}",
+              "httpMethod": "GET",
+              "id": "weather.mapTypes.mapTiles.lookupMapTile",
+              "parameterOrder": [
+                "mapType",
+                "zoom",
+                "x",
+                "y"
+              ],
+              "parameters": {
+                "mapType": {
+                  "description": "Required. The type of the weather map. Defines the weather event that the map will graphically represent. Allowed values: - US_PRECIPITATION_CURRENT - US precipitation current map. - EU_PRECIPITATION_CURRENT - EU precipitation current map.",
+                  "enum": [
+                    "MAP_TYPE_UNSPECIFIED",
+                    "US_PRECIPITATION_CURRENT",
+                    "EU_PRECIPITATION_CURRENT"
+                  ],
+                  "enumDescriptions": [
+                    "The default value. Ignores the value if passed as a parameter.",
+                    "Represents a US precipitation current map.",
+                    "Represents an EU precipitation current map."
+                  ],
+                  "location": "path",
+                  "required": true,
+                  "type": "string"
+                },
+                "x": {
+                  "description": "Required. Defines the east-west point in the requested tile. Must be non-negative.",
+                  "format": "int32",
+                  "location": "path",
+                  "required": true,
+                  "type": "integer"
+                },
+                "y": {
+                  "description": "Required. Defines the north-south point in the requested tile. Must be non-negative.",
+                  "format": "int32",
+                  "location": "path",
+                  "required": true,
+                  "type": "integer"
+                },
+                "zoom": {
+                  "description": "Required. The map's zoom level. Defines how large or small the contents of a map appear in a map view. Zoom level 0 is the entire world in a single tile. Zoom level 1 is the entire world in 4 tiles. Zoom level 2 is the entire world in 16 tiles. Zoom level 16 is the entire world in 65,536 tiles. Allowed values: 0-16",
+                  "format": "int32",
+                  "location": "path",
+                  "required": true,
+                  "type": "integer"
+                }
+              },
+              "path": "v1/mapTypes/{mapType}/mapTiles/{zoom}/{x}/{y}",
+              "response": {
+                "$ref": "HttpBody"
+              },
+              "scopes": [
+                "https://www.googleapis.com/auth/cloud-platform"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "publicAlerts": {
+      "methods": {
+        "lookup": {
+          "description": "Returns public weather alerts for a given location.",
+          "flatPath": "v1/publicAlerts:lookup",
+          "httpMethod": "GET",
+          "id": "weather.publicAlerts.lookup",
+          "parameterOrder": [],
+          "parameters": {
+            "languageCode": {
+              "description": "Optional. Allows the client to choose the language for the response. If data cannot be provided for that language, the API uses the closest match. Allowed values rely on the IETF BCP-47 standard. The default value is \"en\".",
+              "location": "query",
+              "type": "string"
+            },
+            "location.latitude": {
+              "description": "The latitude in degrees. It must be in the range [-90.0, +90.0].",
+              "format": "double",
+              "location": "query",
+              "type": "number"
+            },
+            "location.longitude": {
+              "description": "The longitude in degrees. It must be in the range [-180.0, +180.0].",
+              "format": "double",
+              "location": "query",
+              "type": "number"
+            },
+            "pageSize": {
+              "description": "Optional. The maximum number of public weather alert records to return per page.",
+              "format": "int32",
+              "location": "query",
+              "type": "integer"
+            },
+            "pageToken": {
+              "description": "Optional. A page token received from a previous `LookupPublicAlerts` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `LookupPublicAlerts` must match the call that provided the page token.",
+              "location": "query",
+              "type": "string"
+            }
+          },
+          "path": "v1/publicAlerts:lookup",
+          "response": {
+            "$ref": "LookupPublicAlertsResponse"
+          },
+          "scopes": [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ]
+        }
+      }
+    }
+  },
+  "revision": "20260916",
+  "rootUrl": "https://weather.googleapis.com/",
+  "schemas": {
+    "AirPressure": {
+      "description": "Represents the atmospheric air pressure conditions.",
+      "id": "AirPressure",
+      "properties": {
+        "meanSeaLevelMillibars": {
+          "description": "The mean sea level air pressure in millibars.",
+          "format": "float",
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "CurrentConditionsHistory": {
+      "description": "Represents a set of changes in the current conditions over the last 24 hours.",
+      "id": "CurrentConditionsHistory",
+      "properties": {
+        "maxTemperature": {
+          "$ref": "Temperature",
+          "description": "The maximum (high) temperature in the past 24 hours."
+        },
+        "minTemperature": {
+          "$ref": "Temperature",
+          "description": "The minimum (low) temperature in the past 24 hours."
+        },
+        "qpf": {
+          "$ref": "QuantitativePrecipitationForecast",
+          "description": "The amount of precipitation rain, measured as liquid water equivalent, that has accumulated over the last 24 hours. Note: QPF is an abbreviation for Quantitative Precipitation Forecast (please see the QuantitativePrecipitationForecast definition for more details)."
+        },
+        "snowQpf": {
+          "$ref": "QuantitativePrecipitationForecast",
+          "description": "The amount of snow, measured as liquid water equivalent, that has accumulated over the last 24 hours. Note: QPF is an abbreviation for Quantitative Precipitation Forecast (please see the QuantitativePrecipitationForecast definition for more details)."
+        },
+        "temperatureChange": {
+          "$ref": "Temperature",
+          "description": "The current temperature minus the temperature 24 hours ago."
+        }
+      },
+      "type": "object"
+    },
+    "DataSource": {
+      "description": "Represents a link to a data source.",
+      "id": "DataSource",
+      "properties": {
+        "authorityUri": {
+          "description": "The URL of the authority's website.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Official publisher name. Please note that while this field should be localized, it is not guaranteed that it will be.",
+          "type": "string"
+        },
+        "publisher": {
+          "description": "Optional. The publisher of the alert.",
+          "enum": [
+            "PUBLISHER_UNSPECIFIED",
+            "AUSTRALIA_ACT_ESA",
+            "AUSTRALIA_NSW_RFS",
+            "AUSTRALIA_QLD_QFES",
+            "AUSTRALIA_SA_CFS",
+            "METEO_ALARM_AT",
+            "METEO_ALARM_BS",
+            "BRAZIL_CENAD",
+            "BRAZIL_INMET",
+            "METEO_ALARM_BG",
+            "METEO_ALARM_CR",
+            "METEO_ALARM_CY",
+            "METEO_ALARM_CS",
+            "METEO_ALARM_DK",
+            "EC_INAMHI",
+            "METEO_ALARM_FI",
+            "METEO_ALARM_FR",
+            "DE_DWD",
+            "METEO_ALARM_GB",
+            "METEO_ALARM_GR",
+            "METEO_ALARM_HU",
+            "METEO_ALARM_IS",
+            "METEO_ALARM_IE",
+            "METEO_ALARM_IT",
+            "JM_JMS",
+            "JMA",
+            "METEO_ALARM_NL",
+            "METEO_ALARM_LV",
+            "METEO_ALARM_LT",
+            "METEO_ALARM_LU",
+            "MEXICO_CIRES",
+            "NZ_GEONET",
+            "NZ_NMS",
+            "METEO_ALARM_MK",
+            "METEO_ALARM_NO",
+            "PHILIPPINES_PAGASA",
+            "METEO_ALARM_PL",
+            "METEO_ALARM_PT",
+            "METEO_ALARM_RO",
+            "METEO_ALARM_RS",
+            "SG_MSS",
+            "METEO_ALARM_SK",
+            "METEO_ALARM_SI",
+            "SB_MET",
+            "METEO_ALARM_ES",
+            "METEO_ALARM_SE",
+            "METEO_ALARM_CH",
+            "TAIWAN_NCDR",
+            "NOAA",
+            "WCATWC"
+          ],
+          "enumDescriptions": [
+            "Publisher unspecified.",
+            "Australia Australian Capital Territory",
+            "New South Wales",
+            "Queensland",
+            "South Australia",
+            "Meteoalarm / EUMETNET Austria",
+            "Bosnia",
+            "Disaster Agency in Brazil",
+            "Meteorological Agency in Brazil",
+            "Bulgaria",
+            "Croatia",
+            "Cyprus",
+            "Czechia",
+            "Denmark",
+            "Ecuador",
+            "Finland",
+            "France",
+            "Germany",
+            "Great Britain",
+            "Greece",
+            "Hungary",
+            "Iceland",
+            "Ireland",
+            "Italy",
+            "Jamaica",
+            "Japan",
+            "Netherlands",
+            "Latvia",
+            "Lithuania",
+            "Luxembourg",
+            "Mexico CIRES",
+            "New Zealand GeoNet",
+            "MetService",
+            "North Macedonia",
+            "Norway",
+            "Philippines",
+            "Poland",
+            "Portugal",
+            "Romania",
+            "Serbia",
+            "Singapore",
+            "Slovakia",
+            "Slovenia",
+            "Solomon Islands",
+            "Spain",
+            "Sweden",
+            "Switzerland",
+            "Taiwan",
+            "NOAA",
+            "National Tsunami Warning Center"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Date": {
+      "description": "Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp",
+      "id": "Date",
+      "properties": {
+        "day": {
+          "description": "Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn't significant.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "month": {
+          "description": "Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "year": {
+          "description": "Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.",
+          "format": "int32",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "DateTime": {
+      "description": "Represents civil time (or occasionally physical time). This type can represent a civil time in one of a few possible ways: * When utc_offset is set and time_zone is unset: a civil time on a calendar day with a particular offset from UTC. * When time_zone is set and utc_offset is unset: a civil time on a calendar day in a particular time zone. * When neither time_zone nor utc_offset is set: a civil time on a calendar day in local time. The date is relative to the Proleptic Gregorian Calendar. If year, month, or day are 0, the DateTime is considered not to have a specific year, month, or day respectively. This type may also be used to represent a physical time if all the date and time fields are set and either case of the `time_offset` oneof is set. Consider using `Timestamp` message for physical time instead. If your use case also would like to store the user's timezone, that can be done in another field. This type is more flexible than some applications may want. Make sure to document and validate your application's limitations.",
+      "id": "DateTime",
+      "properties": {
+        "day": {
+          "description": "Optional. Day of month. Must be from 1 to 31 and valid for the year and month, or 0 if specifying a datetime without a day.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "hours": {
+          "description": "Optional. Hours of day in 24 hour format. Should be from 0 to 23, defaults to 0 (midnight). An API may choose to allow the value \"24:00:00\" for scenarios like business closing time.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "minutes": {
+          "description": "Optional. Minutes of hour of day. Must be from 0 to 59, defaults to 0.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "month": {
+          "description": "Optional. Month of year. Must be from 1 to 12, or 0 if specifying a datetime without a month.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "nanos": {
+          "description": "Optional. Fractions of seconds in nanoseconds. Must be from 0 to 999,999,999, defaults to 0.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "seconds": {
+          "description": "Optional. Seconds of minutes of the time. Must normally be from 0 to 59, defaults to 0. An API may allow the value 60 if it allows leap-seconds.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "timeZone": {
+          "$ref": "TimeZone",
+          "description": "Time zone."
+        },
+        "utcOffset": {
+          "description": "UTC offset. Must be whole seconds, between -18 hours and +18 hours. For example, a UTC offset of -4:00 would be represented as { seconds: -14400 }.",
+          "format": "google-duration",
+          "type": "string"
+        },
+        "year": {
+          "description": "Optional. Year of date. Must be from 1 to 9999, or 0 if specifying a datetime without a year.",
+          "format": "int32",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "ForecastDay": {
+      "description": "Represents a daily forecast record at a given location.",
+      "id": "ForecastDay",
+      "properties": {
+        "daytimeForecast": {
+          "$ref": "ForecastDayPart",
+          "description": "The forecasted weather conditions for the daytime part of the day (7am to 7pm local time)."
+        },
+        "displayDate": {
+          "$ref": "Date",
+          "description": "The local date in the time zone of the location (civil time) which this daily forecast is calculated for. This field may be used for display purposes on the client."
+        },
+        "feelsLikeMaxTemperature": {
+          "$ref": "Temperature",
+          "description": "The maximum (high) feels-like temperature throughout the day."
+        },
+        "feelsLikeMinTemperature": {
+          "$ref": "Temperature",
+          "description": "The minimum (low) feels-like temperature throughout the day."
+        },
+        "interval": {
+          "$ref": "Interval",
+          "description": "The UTC time interval when this forecasted day is starts (inclusive) and ends (exclusive). Note: a day starts at 7am and ends at 7am next day, local time. For example: If the local time zone is UTC-7, then the interval will start at the time `14:00:00.000Z` and end at the same hour the next day."
+        },
+        "maxHeatIndex": {
+          "$ref": "Temperature",
+          "description": "The maximum heat index temperature throughout the day."
+        },
+        "maxTemperature": {
+          "$ref": "Temperature",
+          "description": "The maximum (high) temperature throughout the day."
+        },
+        "minTemperature": {
+          "$ref": "Temperature",
+          "description": "The minimum (low) temperature throughout the day."
+        },
+        "moonEvents": {
+          "$ref": "MoonEvents",
+          "description": "The events related to the moon (e.g. moonrise, moonset)."
+        },
+        "nighttimeForecast": {
+          "$ref": "ForecastDayPart",
+          "description": "The forecasted weather conditions for the nighttime part of the day (7pm to 7am next day, local time)."
+        },
+        "sunEvents": {
+          "$ref": "SunEvents",
+          "description": "The events related to the sun (e.g. sunrise, sunset)."
+        }
+      },
+      "type": "object"
+    },
+    "ForecastDayPart": {
+      "description": "Represents a forecast record for a part of the day.",
+      "id": "ForecastDayPart",
+      "properties": {
+        "cloudCover": {
+          "description": "Average cloud cover percent.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "iceThickness": {
+          "$ref": "IceThickness",
+          "description": "The accumulated amount of ice for the part of the day."
+        },
+        "interval": {
+          "$ref": "Interval",
+          "description": "The UTC date and time when this part of the day starts (inclusive) and ends (exclusive). Note: a part of a day starts at 7am and ends at 7pm the same day, local time. For example: If the local time zone is UTC-7, then the daytime interval will start at the time `14:00:00.000Z` and end at `02:00:00.000Z` the next day and the nighttime interval will start at `02:00:00.000Z` the next day and end at `14:00:00.000Z` that same day."
+        },
+        "precipitation": {
+          "$ref": "Precipitation",
+          "description": "The forecasted precipitation."
+        },
+        "relativeHumidity": {
+          "description": "The forecasted percent of relative humidity (values from 0 to 100).",
+          "format": "int32",
+          "type": "integer"
+        },
+        "thunderstormProbability": {
+          "description": "The average thunderstorm probability.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "uvIndex": {
+          "description": "The maximum forecasted ultraviolet (UV) index.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "weatherCondition": {
+          "$ref": "WeatherCondition",
+          "description": "The forecasted weather condition."
+        },
+        "wind": {
+          "$ref": "Wind",
+          "description": "The average wind direction and maximum speed and gust."
+        }
+      },
+      "type": "object"
+    },
+    "ForecastHour": {
+      "description": "Represents an hourly forecast record at a given location.",
+      "id": "ForecastHour",
+      "properties": {
+        "airPressure": {
+          "$ref": "AirPressure",
+          "description": "The forecasted air pressure conditions."
+        },
+        "cloudCover": {
+          "description": "The forecasted percentage of the sky covered by clouds (values from 0 to 100).",
+          "format": "int32",
+          "type": "integer"
+        },
+        "dewPoint": {
+          "$ref": "Temperature",
+          "description": "The forecasted dew point temperature."
+        },
+        "displayDateTime": {
+          "$ref": "DateTime",
+          "description": "The local date and time in the time zone of the location (civil time) which this hourly forecast is calculated for. This field may be used for display purposes on the client. Note: this date will consist of the year, month, day, hour and offset from UTC."
+        },
+        "feelsLikeTemperature": {
+          "$ref": "Temperature",
+          "description": "The measure of how the temperature will feel like at the requested location."
+        },
+        "heatIndex": {
+          "$ref": "Temperature",
+          "description": "The forecasted heat index temperature."
+        },
+        "iceThickness": {
+          "$ref": "IceThickness",
+          "description": "The forecasted ice thickness."
+        },
+        "interval": {
+          "$ref": "Interval",
+          "description": "The one hour interval (in UTC time) this forecast data is valid for (the timestamps are rounded down to the closest hour)."
+        },
+        "isDaytime": {
+          "description": "True if this hour is between the local sunrise (inclusive) and sunset (exclusive) times. Otherwise, it is nighttime (between the sunset and the next sunrise). Note: this hour will be considered as daytime or nighttime if the interval intersects with the local sunrise and sunset times respectively (e.g.: if the interval is from 5am to 6am and sunrise is at 5:59am, then is_daytime will be true).",
+          "type": "boolean"
+        },
+        "precipitation": {
+          "$ref": "Precipitation",
+          "description": "The forecasted precipitation probability and amount of precipitation accumulated over the last hour."
+        },
+        "relativeHumidity": {
+          "description": "The forecasted percent of relative humidity (values from 0 to 100).",
+          "format": "int32",
+          "type": "integer"
+        },
+        "temperature": {
+          "$ref": "Temperature",
+          "description": "The forecasted temperature."
+        },
+        "thunderstormProbability": {
+          "description": "The forecasted thunderstorm probability (values from 0 to 100).",
+          "format": "int32",
+          "type": "integer"
+        },
+        "uvIndex": {
+          "description": "The forecasted ultraviolet (UV) index.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "visibility": {
+          "$ref": "Visibility",
+          "description": "The forecasted visibility."
+        },
+        "weatherCondition": {
+          "$ref": "WeatherCondition",
+          "description": "The foreacasted weather condition."
+        },
+        "wetBulbTemperature": {
+          "$ref": "Temperature",
+          "description": "The forecasted wet bulb temperature, lowest temperature achievable by evaporating water."
+        },
+        "wind": {
+          "$ref": "Wind",
+          "description": "The forecasted wind conditions."
+        },
+        "windChill": {
+          "$ref": "Temperature",
+          "description": "The forecasted wind chill, air temperature exposed on the skin."
+        }
+      },
+      "type": "object"
+    },
+    "HistoryHour": {
+      "description": "Represents an hourly history record at a given location.",
+      "id": "HistoryHour",
+      "properties": {
+        "airPressure": {
+          "$ref": "AirPressure",
+          "description": "The historical air pressure conditions."
+        },
+        "cloudCover": {
+          "description": "The historical percentage of the sky covered by clouds (values from 0 to 100).",
+          "format": "int32",
+          "type": "integer"
+        },
+        "dewPoint": {
+          "$ref": "Temperature",
+          "description": "The historical dew point temperature."
+        },
+        "displayDateTime": {
+          "$ref": "DateTime",
+          "description": "The local date and time in the time zone of the location (civil time) which this hourly record is calculated for. This field may be used for display purposes on the client. Note: this date will consist of the year, month, day, hour and offset from UTC."
+        },
+        "feelsLikeTemperature": {
+          "$ref": "Temperature",
+          "description": "The measure of how the temperature felt like at the requested location."
+        },
+        "heatIndex": {
+          "$ref": "Temperature",
+          "description": "The historical heat index temperature."
+        },
+        "iceThickness": {
+          "$ref": "IceThickness",
+          "description": "The historical ice thickness."
+        },
+        "interval": {
+          "$ref": "Interval",
+          "description": "The one hour interval (in UTC time) this historical data is valid for (the timestamps are rounded down to the closest hour)."
+        },
+        "isDaytime": {
+          "description": "True if this hour is between the local sunrise (inclusive) and sunset (exclusive) times. Otherwise, it is nighttime (between the sunset and the next sunrise). Note: this hour will be considered as daytime or nighttime if the interval intersects with the local sunrise and sunset times respectively (e.g.: if the interval is from 5am to 6am and sunrise is at 5:59am, then is_daytime will be true).",
+          "type": "boolean"
+        },
+        "precipitation": {
+          "$ref": "Precipitation",
+          "description": "The historical precipitation probability and amount of precipitation accumulated over the last hour."
+        },
+        "relativeHumidity": {
+          "description": "The historical percent of relative humidity (values from 0 to 100).",
+          "format": "int32",
+          "type": "integer"
+        },
+        "temperature": {
+          "$ref": "Temperature",
+          "description": "The historical temperature."
+        },
+        "thunderstormProbability": {
+          "description": "The historical thunderstorm probability (values from 0 to 100).",
+          "format": "int32",
+          "type": "integer"
+        },
+        "uvIndex": {
+          "description": "The historical ultraviolet (UV) index.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "visibility": {
+          "$ref": "Visibility",
+          "description": "The historical visibility."
+        },
+        "weatherCondition": {
+          "$ref": "WeatherCondition",
+          "description": "The historical weather condition."
+        },
+        "wetBulbTemperature": {
+          "$ref": "Temperature",
+          "description": "The historical wet bulb temperature, lowest temperature achievable by evaporating water."
+        },
+        "wind": {
+          "$ref": "Wind",
+          "description": "The historical wind conditions."
+        },
+        "windChill": {
+          "$ref": "Temperature",
+          "description": "The historical wind chill, air temperature exposed on the skin."
+        }
+      },
+      "type": "object"
+    },
+    "HttpBody": {
+      "description": "Message that represents an arbitrary HTTP body. It should only be used for payload formats that can't be represented as JSON, such as raw binary or an HTML page. This message can be used both in streaming and non-streaming API methods in the request as well as the response. It can be used as a top-level request field, which is convenient if one wants to extract parameters from either the URL or HTTP template into the request fields and also want access to the raw HTTP body. Example: message GetResourceRequest { // A unique request id. string request_id = 1; // The raw HTTP body is bound to this field. google.api.HttpBody http_body = 2; } service ResourceService { rpc GetResource(GetResourceRequest) returns (google.api.HttpBody); rpc UpdateResource(google.api.HttpBody) returns (google.protobuf.Empty); } Example with streaming methods: service CaldavService { rpc GetCalendar(stream google.api.HttpBody) returns (stream google.api.HttpBody); rpc UpdateCalendar(stream google.api.HttpBody) returns (stream google.api.HttpBody); } Use of this type only changes how the request and response bodies are handled, all other features will continue to work unchanged.",
+      "id": "HttpBody",
+      "properties": {
+        "contentType": {
+          "description": "The HTTP Content-Type header value specifying the content type of the body.",
+          "type": "string"
+        },
+        "data": {
+          "description": "The HTTP request/response body as raw binary.",
+          "format": "byte",
+          "type": "string"
+        },
+        "extensions": {
+          "description": "Application specific response metadata. Must be set in the first response for streaming APIs.",
+          "items": {
+            "additionalProperties": {
+              "description": "Properties of the object. Contains field @type with type URL.",
+              "type": "any"
+            },
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "IceThickness": {
+      "description": "Represents ice thickness conditions.",
+      "id": "IceThickness",
+      "properties": {
+        "thickness": {
+          "description": "The ice thickness value.",
+          "format": "float",
+          "type": "number"
+        },
+        "unit": {
+          "description": "The code that represents the unit used to measure the ice thickness.",
+          "enum": [
+            "UNIT_UNSPECIFIED",
+            "MILLIMETERS",
+            "INCHES"
+          ],
+          "enumDescriptions": [
+            "The unit is not specified.",
+            "The thickness is measured in millimeters.",
+            "The thickness is measured in inches."
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Interval": {
+      "description": "Represents a time interval, encoded as a Timestamp start (inclusive) and a Timestamp end (exclusive). The start must be less than or equal to the end. When the start equals the end, the interval is empty (matches no time). When both start and end are unspecified, the interval matches any time.",
+      "id": "Interval",
+      "properties": {
+        "endTime": {
+          "description": "Optional. Exclusive end of the interval. If specified, a Timestamp matching this interval will have to be before the end.",
+          "format": "google-datetime",
+          "type": "string"
+        },
+        "startTime": {
+          "description": "Optional. Inclusive start of the interval. If specified, a Timestamp matching this interval will have to be the same or after the start.",
+          "format": "google-datetime",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "LocalizedText": {
+      "description": "Localized variant of a text in a particular language.",
+      "id": "LocalizedText",
+      "properties": {
+        "languageCode": {
+          "description": "The text's BCP-47 language code, such as \"en-US\" or \"sr-Latn\". For more information, see http://www.unicode.org/reports/tr35/#Unicode_locale_identifier.",
+          "type": "string"
+        },
+        "text": {
+          "description": "Localized string in the language corresponding to language_code below.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "LookupCurrentConditionsResponse": {
+      "description": "Response for the LookupCurrentConditions RPC - represents the current weather conditions at the requested location.",
+      "id": "LookupCurrentConditionsResponse",
+      "properties": {
+        "airPressure": {
+          "$ref": "AirPressure",
+          "description": "The current air pressure conditions."
+        },
+        "cloudCover": {
+          "description": "The current percentage of the sky covered by clouds (values from 0 to 100).",
+          "format": "int32",
+          "type": "integer"
+        },
+        "currentConditionsHistory": {
+          "$ref": "CurrentConditionsHistory",
+          "description": "The changes in the current conditions over the last 24 hours."
+        },
+        "currentTime": {
+          "description": "Current time (UTC) associated with the returned data.",
+          "format": "google-datetime",
+          "type": "string"
+        },
+        "dewPoint": {
+          "$ref": "Temperature",
+          "description": "The current dew point temperature."
+        },
+        "feelsLikeTemperature": {
+          "$ref": "Temperature",
+          "description": "The measure of how the temperature currently feels like at the requested location."
+        },
+        "heatIndex": {
+          "$ref": "Temperature",
+          "description": "The current heat index temperature."
+        },
+        "isDaytime": {
+          "description": "True if the current time at the requested location is between the local sunrise (inclusive) and the sunset (exclusive) times. Otherwise, it is nighttime (between the sunset and the next sunrise).",
+          "type": "boolean"
+        },
+        "precipitation": {
+          "$ref": "Precipitation",
+          "description": "The current precipitation probability and amount of precipitation accumulated over the last hour."
+        },
+        "relativeHumidity": {
+          "description": "The current percent of relative humidity (values from 0 to 100).",
+          "format": "int32",
+          "type": "integer"
+        },
+        "temperature": {
+          "$ref": "Temperature",
+          "description": "The current temperature."
+        },
+        "thunderstormProbability": {
+          "description": "The current thunderstorm probability (values from 0 to 100).",
+          "format": "int32",
+          "type": "integer"
+        },
+        "timeZone": {
+          "$ref": "TimeZone",
+          "description": "The time zone at the requested location."
+        },
+        "uvIndex": {
+          "description": "The current ultraviolet (UV) index.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "visibility": {
+          "$ref": "Visibility",
+          "description": "The current visibility."
+        },
+        "weatherCondition": {
+          "$ref": "WeatherCondition",
+          "description": "The current weather condition."
+        },
+        "wind": {
+          "$ref": "Wind",
+          "description": "The current wind conditions."
+        },
+        "windChill": {
+          "$ref": "Temperature",
+          "description": "The current wind chill, air temperature exposed on the skin."
+        }
+      },
+      "type": "object"
+    },
+    "LookupForecastDaysResponse": {
+      "description": "Response for the LookupForecastDays RPC.",
+      "id": "LookupForecastDaysResponse",
+      "properties": {
+        "forecastDays": {
+          "description": "The daily forecast records, according to the number of days and page size specified in the request.",
+          "items": {
+            "$ref": "ForecastDay"
+          },
+          "type": "array"
+        },
+        "nextPageToken": {
+          "description": "The token to retrieve the next page.",
+          "type": "string"
+        },
+        "timeZone": {
+          "$ref": "TimeZone",
+          "description": "The time zone at the requested location."
+        }
+      },
+      "type": "object"
+    },
+    "LookupForecastHoursResponse": {
+      "description": "Response for the LookupForecastHours RPC.",
+      "id": "LookupForecastHoursResponse",
+      "properties": {
+        "forecastHours": {
+          "description": "The hourly forecast records, according to the number of hours and page size specified in the request.",
+          "items": {
+            "$ref": "ForecastHour"
+          },
+          "type": "array"
+        },
+        "nextPageToken": {
+          "description": "The token to retrieve the next page.",
+          "type": "string"
+        },
+        "timeZone": {
+          "$ref": "TimeZone",
+          "description": "The time zone at the requested location."
+        }
+      },
+      "type": "object"
+    },
+    "LookupForecastMinutesResponse": {
+      "description": "Response for the LookupForecastMinutes RPC.",
+      "id": "LookupForecastMinutesResponse",
+      "properties": {
+        "nextPageToken": {
+          "description": "The token to retrieve the next page.",
+          "type": "string"
+        },
+        "overallPredictionTimeframe": {
+          "$ref": "Interval",
+          "description": "The overall timeframe for the predictions."
+        },
+        "segments": {
+          "description": "The minute-level prediction segments.",
+          "items": {
+            "$ref": "PrecipitationSegment"
+          },
+          "type": "array"
+        },
+        "timeZone": {
+          "$ref": "TimeZone",
+          "description": "The time zone at the requested location."
+        }
+      },
+      "type": "object"
+    },
+    "LookupHistoryHoursResponse": {
+      "description": "Response for the LookupHistoryHours RPC.",
+      "id": "LookupHistoryHoursResponse",
+      "properties": {
+        "historyHours": {
+          "description": "The hourly historical records, according to the number of hours and page size specified in the request.",
+          "items": {
+            "$ref": "HistoryHour"
+          },
+          "type": "array"
+        },
+        "nextPageToken": {
+          "description": "The token to retrieve the next page.",
+          "type": "string"
+        },
+        "timeZone": {
+          "$ref": "TimeZone",
+          "description": "The time zone at the requested location."
+        }
+      },
+      "type": "object"
+    },
+    "LookupPublicAlertsResponse": {
+      "description": "Response for the LookupPublicAlerts RPC.",
+      "id": "LookupPublicAlertsResponse",
+      "properties": {
+        "nextPageToken": {
+          "description": "A token that can be sent as `page_token` to retrieve the next page. If this field is omitted, there are no subsequent pages.",
+          "type": "string"
+        },
+        "regionCode": {
+          "description": "The ISO_3166-1 alpha-2 code of the region corresponding to the location provided in the request. The region is stated using ISO_3166-1_alpha-2.",
+          "type": "string"
+        },
+        "weatherAlerts": {
+          "description": "The public weather alert records, according to the number of alerts and page size specified in the request.",
+          "items": {
+            "$ref": "PublicAlerts"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "MoonEvents": {
+      "description": "Represents the events related to the moon (e.g. moonrise, moonset).",
+      "id": "MoonEvents",
+      "properties": {
+        "moonPhase": {
+          "description": "Optional. The moon phase (a.k.a. lunar phase).",
+          "enum": [
+            "PHASE_UNSPECIFIED",
+            "NEW_MOON",
+            "WAXING_CRESCENT",
+            "FIRST_QUARTER",
+            "WAXING_GIBBOUS",
+            "FULL_MOON",
+            "WANING_GIBBOUS",
+            "LAST_QUARTER",
+            "WANING_CRESCENT"
+          ],
+          "enumDescriptions": [
+            "Unspecified moon phase.",
+            "The moon is not illuminated by the sun.",
+            "The moon is lit by 0%-50% on its right side in the northern hemisphere 🌒 and on its left side in the southern hemisphere 🌘.",
+            "The moon is lit by 50.1% on its right side in the northern hemisphere 🌓 and on its left side in the southern hemisphere 🌗.",
+            "The moon is lit by 50%-100% on its right side in the northern hemisphere 🌔 and on its left side in the southern hemisphere 🌖.",
+            "The moon is fully illuminated.",
+            "The moon is lit by 50%-100% on its left side in the northern hemisphere 🌖 and on its right side in the southern hemisphere 🌔.",
+            "The moon is lit by 50.1% on its left side in the northern hemisphere 🌗 and on its right side in the southern hemisphere 🌓.",
+            "The moon is lit by 0%-50% on its left side in the northern hemisphere 🌘 and on its right side in the southern hemisphere 🌒."
+          ],
+          "type": "string"
+        },
+        "moonriseTimes": {
+          "description": "The time when the upper limb of the moon appears above the horizon (see https://en.wikipedia.org/wiki/Moonrise_and_moonset). NOTE: For most cases, there'll be a single moon rise time per day. In other cases, the list might be empty (e.g. when the moon rises after next day midnight). However, in unique cases (e.g. in polar regions), the list may contain more than one value. In these cases, the values are sorted in ascending order.",
+          "items": {
+            "format": "google-datetime",
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "moonsetTimes": {
+          "description": "The time when the upper limb of the moon disappears below the horizon (see https://en.wikipedia.org/wiki/Moonrise_and_moonset). NOTE: For most cases, there'll be a single moon set time per day. In other cases, the list might be empty (e.g. when the moon sets after next day midnight). However, in unique cases (e.g. in polar regions), the list may contain more than one value. In these cases, the values are sorted in ascending order.",
+          "items": {
+            "format": "google-datetime",
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "Precipitation": {
+      "description": "Represents a set of precipitation values at a given location.",
+      "id": "Precipitation",
+      "properties": {
+        "probability": {
+          "$ref": "PrecipitationProbability",
+          "description": "The probability of precipitation (values from 0 to 100)."
+        },
+        "qpf": {
+          "$ref": "QuantitativePrecipitationForecast",
+          "description": "The amount of precipitation rain, measured as liquid water equivalent, that has accumulated over a period of time. Note: QPF is an abbreviation for Quantitative Precipitation Forecast (please see the QuantitativePrecipitationForecast definition for more details)."
+        },
+        "snowQpf": {
+          "$ref": "QuantitativePrecipitationForecast",
+          "description": "The amount of snow, measured as liquid water equivalent, that has accumulated over a period of time. Note: QPF is an abbreviation for Quantitative Precipitation Forecast (please see the QuantitativePrecipitationForecast definition for more details)."
+        }
+      },
+      "type": "object"
+    },
+    "PrecipitationProbability": {
+      "description": "Represents the probability of precipitation at a given location.",
+      "id": "PrecipitationProbability",
+      "properties": {
+        "percent": {
+          "description": "A percentage from 0 to 100 that indicates the chances of precipitation.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "type": {
+          "description": "Optional. A code that indicates the type of precipitation.",
+          "enum": [
+            "TYPE_UNSPECIFIED",
+            "NONE",
+            "SNOW",
+            "RAIN",
+            "LIGHT_RAIN",
+            "HEAVY_RAIN",
+            "RAIN_AND_SNOW",
+            "SLEET",
+            "FREEZING_RAIN",
+            "PRECIPITATION_TYPE_HAIL"
+          ],
+          "enumDescriptions": [
+            "Unspecified precipitation type.",
+            "No precipitation.",
+            "Snow precipitation.",
+            "Rain precipitation.",
+            "Light rain precipitation.",
+            "Heavy rain precipitation.",
+            "Both rain and snow precipitations.",
+            "Sleet precipitation.",
+            "Freezing rain precipitation.",
+            "Hail precipitation."
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "PrecipitationSegment": {
+      "description": "Represents a segment of precipitation forecast data.",
+      "id": "PrecipitationSegment",
+      "properties": {
+        "intensity": {
+          "description": "Precipitation intensity of the segment.",
+          "enum": [
+            "PRECIPITATION_INTENSITY_UNSPECIFIED",
+            "NO_INTENSITY",
+            "LIGHT",
+            "MODERATE",
+            "HEAVY",
+            "MID_LIGHT",
+            "MID_MODERATE",
+            "MID_HEAVY"
+          ],
+          "enumDescriptions": [
+            "Unknown precipitation intensity.",
+            "No precipitation intensity.",
+            "Light precipitation intensity.",
+            "Moderate precipitation intensity.",
+            "Heavy precipitation intensity.",
+            "Mid-light precipitation intensity.",
+            "Mid-moderate precipitation intensity.",
+            "Mid-heavy precipitation intensity."
+          ],
+          "type": "string"
+        },
+        "probability": {
+          "description": "The chance of precipitation. Values are in percentages ranging from 0 to 100.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "qpf": {
+          "$ref": "QuantitativePrecipitationForecast",
+          "description": "Quantitative precipitation forecast"
+        },
+        "snowfallAmount": {
+          "$ref": "QuantitativePrecipitationForecast",
+          "description": "Snow quantitative precipitation forecast"
+        },
+        "timeFrame": {
+          "$ref": "Interval",
+          "description": "The timeframe relevant to the segment."
+        },
+        "type": {
+          "description": "The type of precipitation.",
+          "enum": [
+            "DOMINANT_PRECIPITATION_TYPE_UNSPECIFIED",
+            "NONE",
+            "RAIN",
+            "SNOW",
+            "HAIL"
+          ],
+          "enumDescriptions": [
+            "Unspecified precipitation type.",
+            "No precipitation.",
+            "Rain.",
+            "Snow.",
+            "Hail."
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "PublicAlerts": {
+      "description": "Represents the public weather alerts.",
+      "id": "PublicAlerts",
+      "properties": {
+        "alertId": {
+          "description": "The unique identifier for this alert.",
+          "type": "string"
+        },
+        "alertTitle": {
+          "$ref": "LocalizedText",
+          "description": "The localized title for the alert."
+        },
+        "areaName": {
+          "description": "The name of the area where the alert is issued.",
+          "type": "string"
+        },
+        "certainty": {
+          "description": "Optional. The certainty of the alert.",
+          "enum": [
+            "CERTAINTY_UNKNOWN",
+            "OBSERVED",
+            "VERY_LIKELY",
+            "LIKELY",
+            "POSSIBLE",
+            "UNLIKELY"
+          ],
+          "enumDescriptions": [
+            "Certainty not known.",
+            "Determined to have occurred or to be ongoing.",
+            "Very likely.",
+            "Likely (p > ~50%).",
+            "Possible but not likely (p <= ~50%).",
+            "Unlikely (p ~ 0%)."
+          ],
+          "type": "string"
+        },
+        "dataSource": {
+          "$ref": "DataSource",
+          "description": "Details of the publisher that issued the alert."
+        },
+        "description": {
+          "description": "The latest text describing the alert as issued by the official authority. Please note that while this field should be localized, it is not guaranteed that it will be.",
+          "type": "string"
+        },
+        "eventType": {
+          "description": "Optional. The type of weather event.",
+          "enum": [
+            "EVENT_TYPE_UNSPECIFIED",
+            "ACID_RAIN",
+            "AFTERSHOCK",
+            "AVALANCHE",
+            "BLIZZARD",
+            "BLOWING_SNOW",
+            "BUSHFIRE",
+            "COASTAL_FLOOD",
+            "COASTAL_HAZARD",
+            "COLD",
+            "CYCLONE",
+            "DROUGHT",
+            "DUST_STORM",
+            "EARTHQUAKE",
+            "EXTRATROPICAL_CYCLONE",
+            "FIRE",
+            "FIRE_WEATHER",
+            "FLASH_FLOOD",
+            "FLOOD",
+            "FOG",
+            "FREEZING",
+            "FREEZING_AIR_TEMPERATURE",
+            "FREEZING_DRIZZLE",
+            "FREEZING_RAIN_EVENT",
+            "FROST",
+            "GALE",
+            "GLAZE",
+            "HAIL",
+            "HAZARDOUS_SEAS",
+            "HEAT",
+            "HUMIDITY",
+            "HURRICANE",
+            "ICE_STORM",
+            "INDUSTRIAL_FIRE",
+            "LAKE_EFFECT_SNOW",
+            "LANDSLIDE",
+            "MONSOON",
+            "MUDDY_FLOOD",
+            "OUTFLOW",
+            "RADIATION",
+            "RAIN_EVENT",
+            "RIVER_FLOODING",
+            "SEVERE_THUNDERSTORM_WARNING",
+            "SNOWSQUALL",
+            "SNOW_EVENT",
+            "STORM",
+            "STORM_SURGE",
+            "THUNDER",
+            "THUNDERSTORM",
+            "TORNADO",
+            "TORNADO_WARNING",
+            "TROPICAL_CYCLONE",
+            "TROPICAL_CYCLONE_WARNINGS_AND_WATCHES",
+            "TROPICAL_DISTURBANCE",
+            "TROPICAL_STORM",
+            "TSUNAMI",
+            "TYPHOON",
+            "VOLCANIC_ASH",
+            "VOLCANIC_ERUPTION",
+            "WILDFIRE",
+            "WIND",
+            "WIND_CHILL",
+            "WIND_WAVE",
+            "WINTER_STORM"
+          ],
+          "enumDescriptions": [
+            "Unspecified weather event type.",
+            "Acid rain event.",
+            "Aftershock event.",
+            "Avalanche event.",
+            "Blizzard event.",
+            "Blowing snow event.",
+            "Bushfire event.",
+            "Coastal flood event.",
+            "Coastal hazard event.",
+            "Cold event.",
+            "Cyclone event.",
+            "Drought event.",
+            "Dust storm event.",
+            "Earthquake event.",
+            "Extra tropical cyclone event.",
+            "Fire event.",
+            "Fire weather event.",
+            "Flash flood event.",
+            "Flood event.",
+            "Fog event.",
+            "Freezing event.",
+            "Freezing air temperature event.",
+            "Freezing drizzle event.",
+            "Freezing rain event.",
+            "Frost event.",
+            "Gale event.",
+            "Glaze event.",
+            "Hail event.",
+            "Hazardous seas event.",
+            "Heat event.",
+            "Humidity event.",
+            "Hurricane event.",
+            "Ice storm event.",
+            "Industrial fire event.",
+            "Lake effect snow event.",
+            "Landslide event.",
+            "Monsoon event.",
+            "Muddy flood event.",
+            "Outflow event.",
+            "Radiation event.",
+            "Rain event.",
+            "River flooding event.",
+            "Severe thunderstorm warning event.",
+            "Snowsquall event.",
+            "Snow event.",
+            "Storm event.",
+            "Storm surge event.",
+            "Thunder event.",
+            "Thunderstorm event.",
+            "Tornado event.",
+            "Tornado warning event.",
+            "Tropical cyclone event.",
+            "Tropical cyclone warnings and watches event.",
+            "Tropical disturbance event.",
+            "Tropical storm event.",
+            "Tsunami event.",
+            "Typhoon event.",
+            "Volcanic ash event.",
+            "Volcanic eruption event.",
+            "Wildfire event.",
+            "Wind event.",
+            "Wind chill event.",
+            "Wind wave event.",
+            "Winter storm event."
+          ],
+          "type": "string"
+        },
+        "expirationTime": {
+          "description": "The expiration time of the event.",
+          "format": "google-datetime",
+          "type": "string"
+        },
+        "instruction": {
+          "description": "Instructions recommended by the publisher. Please note that while this field should be localized, it is not guaranteed that it will be.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "polygon": {
+          "description": "A GeoJSON representation of the areas where the alert is issued. The GeoJSON data must be in RFC 7946 format and represent either a Polygon (for a single contiguous area) or a MultiPolygon (for multiple distinct areas). Example: { \"type\": \"Polygon\", \"coordinates\": [ [ [-1, -1], [-1, 0], [0, 0], [-1, -1] ] ] } A sample MultiPolygon GeoJson string looks like: { \"type\": \"MultiPolygon\", \"coordinates\": [ [ [0, 0], [-1, 0], [-1, 1], [0, 0] ], [ [0, 0], [-2, 0], [-2, 2], [0, 0] ] ] }",
+          "type": "string"
+        },
+        "safetyRecommendations": {
+          "description": "Safety recommendations directive to the user, these can be provided by the publisher or other authorities.",
+          "items": {
+            "$ref": "SafetyRecommendation"
+          },
+          "type": "array"
+        },
+        "severity": {
+          "description": "Optional. The severity level of the alert.",
+          "enum": [
+            "SEVERITY_UNKNOWN",
+            "EXTREME",
+            "SEVERE",
+            "MODERATE",
+            "MINOR"
+          ],
+          "enumDescriptions": [
+            "Severity not known.",
+            "Extraordinary threat to life or property.",
+            "Significant threat to life or property.",
+            "Possible threat to life or property.",
+            "Minor threat to life or property."
+          ],
+          "type": "string"
+        },
+        "startTime": {
+          "description": "The start time of the event.",
+          "format": "google-datetime",
+          "type": "string"
+        },
+        "timezoneOffset": {
+          "description": "The time zone offset from UTC for the location of the alert. The value is formatted as a string ending in 's', e.g., \"-14400s\" for 4 hours behind UTC.",
+          "type": "string"
+        },
+        "urgency": {
+          "description": "Optional. The urgency of the alert.",
+          "enum": [
+            "URGENCY_UNKNOWN",
+            "IMMEDIATE",
+            "EXPECTED",
+            "FUTURE",
+            "PAST"
+          ],
+          "enumDescriptions": [
+            "Urgency not known.",
+            "Responsive action SHOULD be taken immediately.",
+            "Responsive action SHOULD be taken soon (within next hour).",
+            "Responsive action SHOULD be taken in the near future.",
+            "Responsive action is no longer required."
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "QuantitativePrecipitationForecast": {
+      "description": "Represents the expected amount of melted precipitation accumulated over a specified time period over a specified area (reference: https://en.wikipedia.org/wiki/Quantitative_precipitation_forecast) - usually abbreviated QPF for short.",
+      "id": "QuantitativePrecipitationForecast",
+      "properties": {
+        "quantity": {
+          "description": "The amount of precipitation, measured as liquid water equivalent, that has accumulated over a period of time.",
+          "format": "float",
+          "type": "number"
+        },
+        "unit": {
+          "description": "The code of the unit used to measure the amount of accumulated precipitation.",
+          "enum": [
+            "UNIT_UNSPECIFIED",
+            "MILLIMETERS",
+            "INCHES"
+          ],
+          "enumDescriptions": [
+            "Unspecified precipitation unit.",
+            "The amount of precipitation is measured in millimeters.",
+            "The amount of precipitation is measured in inches."
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "SafetyRecommendation": {
+      "description": "Represents a safety recommendation.",
+      "id": "SafetyRecommendation",
+      "properties": {
+        "directive": {
+          "description": "A directive to the user. Please note that while this field should be localized, it is not guaranteed that it will be.",
+          "type": "string"
+        },
+        "subtext": {
+          "description": "An optional subtext for the directive, which may contain additional context for the user. Please note that while this field should be localized, it is not guaranteed that it will be.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "SunEvents": {
+      "description": "Represents the events related to the sun (e.g. sunrise, sunset).",
+      "id": "SunEvents",
+      "properties": {
+        "sunriseTime": {
+          "description": "The time when the sun rises. NOTE: In some unique cases (e.g. north of the artic circle) there may be no sunrise time for a day. In these cases, this field will be unset.",
+          "format": "google-datetime",
+          "type": "string"
+        },
+        "sunsetTime": {
+          "description": "The time when the sun sets. NOTE: In some unique cases (e.g. north of the artic circle) there may be no sunset time for a day. In these cases, this field will be unset.",
+          "format": "google-datetime",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Temperature": {
+      "description": "Represents a temperature value.",
+      "id": "Temperature",
+      "properties": {
+        "degrees": {
+          "description": "The temperature value (in degrees) in the specified unit.",
+          "format": "float",
+          "type": "number"
+        },
+        "unit": {
+          "description": "Optional. The code for the unit used to measure the temperature value.",
+          "enum": [
+            "UNIT_UNSPECIFIED",
+            "CELSIUS",
+            "FAHRENHEIT"
+          ],
+          "enumDescriptions": [
+            "The temperature unit is unspecified.",
+            "The temperature is measured in Celsius.",
+            "The temperature is measured in Fahrenheit."
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "TimeZone": {
+      "description": "Represents a time zone from the [IANA Time Zone Database](https://www.iana.org/time-zones).",
+      "id": "TimeZone",
+      "properties": {
+        "id": {
+          "description": "IANA Time Zone Database time zone. For example \"America/New_York\".",
+          "type": "string"
+        },
+        "version": {
+          "description": "Optional. IANA Time Zone Database version number. For example \"2019a\".",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Visibility": {
+      "description": "Represents visibility conditions, the distance at which objects can be discerned.",
+      "id": "Visibility",
+      "properties": {
+        "distance": {
+          "description": "The visibility distance in the specified unit.",
+          "format": "float",
+          "type": "number"
+        },
+        "unit": {
+          "description": "The code that represents the unit used to measure the distance.",
+          "enum": [
+            "UNIT_UNSPECIFIED",
+            "KILOMETERS",
+            "MILES"
+          ],
+          "enumDescriptions": [
+            "The visibility unit is unspecified.",
+            "The visibility is measured in kilometers.",
+            "The visibility is measured in miles."
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "WeatherCondition": {
+      "description": "Represents a weather condition for a given location at a given period of time. Disclaimer: Weather icons and condition codes are subject to change. Google may introduce new codes and icons or update existing ones as needed. We encourage you to refer to this documentation regularly for the most up-to-date information.",
+      "id": "WeatherCondition",
+      "properties": {
+        "description": {
+          "$ref": "LocalizedText",
+          "description": "The textual description for this weather condition (localized)."
+        },
+        "iconBaseUri": {
+          "description": "The base URI for the icon not including the file type extension. To display the icon, append a theme if desired and the file type extension (`.png` or `.svg`) to this URI. By default, the icon is light themed, but `_dark` can be appended for dark mode. For example: \"https://maps.gstatic.com/weather/v1/dust.svg\" or \"https://maps.gstatic.com/weather/v1/dust_dark.svg\", where `icon_base_uri` is \"https://maps.gstatic.com/weather/v1/dust\".",
+          "type": "string"
+        },
+        "type": {
+          "description": "The type of weather condition.",
+          "enum": [
+            "TYPE_UNSPECIFIED",
+            "CLEAR",
+            "MOSTLY_CLEAR",
+            "PARTLY_CLOUDY",
+            "MOSTLY_CLOUDY",
+            "CLOUDY",
+            "WINDY",
+            "WIND_AND_RAIN",
+            "LIGHT_RAIN_SHOWERS",
+            "CHANCE_OF_SHOWERS",
+            "SCATTERED_SHOWERS",
+            "RAIN_SHOWERS",
+            "HEAVY_RAIN_SHOWERS",
+            "LIGHT_TO_MODERATE_RAIN",
+            "MODERATE_TO_HEAVY_RAIN",
+            "RAIN",
+            "LIGHT_RAIN",
+            "HEAVY_RAIN",
+            "RAIN_PERIODICALLY_HEAVY",
+            "LIGHT_SNOW_SHOWERS",
+            "CHANCE_OF_SNOW_SHOWERS",
+            "SCATTERED_SNOW_SHOWERS",
+            "SNOW_SHOWERS",
+            "HEAVY_SNOW_SHOWERS",
+            "LIGHT_TO_MODERATE_SNOW",
+            "MODERATE_TO_HEAVY_SNOW",
+            "SNOW",
+            "LIGHT_SNOW",
+            "HEAVY_SNOW",
+            "SNOWSTORM",
+            "SNOW_PERIODICALLY_HEAVY",
+            "HEAVY_SNOW_STORM",
+            "BLOWING_SNOW",
+            "RAIN_AND_SNOW",
+            "HAIL",
+            "HAIL_SHOWERS",
+            "THUNDERSTORM",
+            "THUNDERSHOWER",
+            "LIGHT_THUNDERSTORM_RAIN",
+            "SCATTERED_THUNDERSTORMS",
+            "HEAVY_THUNDERSTORM"
+          ],
+          "enumDescriptions": [
+            "The weather condition is unspecified.",
+            "No clouds.",
+            "Periodic clouds.",
+            "Party cloudy (some clouds).",
+            "Mostly cloudy (more clouds than sun).",
+            "Cloudy (all clouds, no sun).",
+            "High wind.",
+            "High wind with precipitation.",
+            "Light intermittent rain.",
+            "Chance of intermittent rain.",
+            "Intermittent rain.",
+            "Showers are considered to be rainfall that has a shorter duration than rain, and is characterized by suddenness in terms of start and stop times, and rapid changes in intensity.",
+            "Intense showers.",
+            "Rain (light to moderate in quantity).",
+            "Rain (moderate to heavy in quantity).",
+            "Moderate rain.",
+            "Light rain.",
+            "Heavy rain.",
+            "Rain periodically heavy.",
+            "Light snow that is falling at varying intensities for brief periods of time.",
+            "Chance of snow showers.",
+            "Snow that is falling at varying intensities for brief periods of time.",
+            "Snow showers.",
+            "Heavy snow showers.",
+            "Light to moderate snow.",
+            "Moderate to heavy snow.",
+            "Moderate snow.",
+            "Light snow.",
+            "Heavy snow.",
+            "Snow with possible thunder and lightning.",
+            "Snow, at times heavy.",
+            "Heavy snow with possible thunder and lightning.",
+            "Snow with intense wind.",
+            "Rain and snow mix.",
+            "Hail.",
+            "Hail that is falling at varying intensities for brief periods of time.",
+            "Thunderstorm.",
+            "A shower of rain accompanied by thunder and lightning.",
+            "Light thunderstorm rain.",
+            "Thunderstorms that has rain in various intensities for brief periods of time.",
+            "Heavy thunderstorm."
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Wind": {
+      "description": "Represents a set of wind properties.",
+      "id": "Wind",
+      "properties": {
+        "direction": {
+          "$ref": "WindDirection",
+          "description": "The direction of the wind, the angle it is coming from."
+        },
+        "gust": {
+          "$ref": "WindSpeed",
+          "description": "The wind gust (sudden increase in the wind speed)."
+        },
+        "speed": {
+          "$ref": "WindSpeed",
+          "description": "The speed of the wind."
+        }
+      },
+      "type": "object"
+    },
+    "WindDirection": {
+      "description": "Represents the direction from which the wind originates.",
+      "id": "WindDirection",
+      "properties": {
+        "cardinal": {
+          "description": "Optional. The code that represents the cardinal direction from which the wind is blowing.",
+          "enum": [
+            "CARDINAL_UNSPECIFIED",
+            "NORTH",
+            "NORTH_NORTHEAST",
+            "NORTHEAST",
+            "EAST_NORTHEAST",
+            "EAST",
+            "EAST_SOUTHEAST",
+            "SOUTHEAST",
+            "SOUTH_SOUTHEAST",
+            "SOUTH",
+            "SOUTH_SOUTHWEST",
+            "SOUTHWEST",
+            "WEST_SOUTHWEST",
+            "WEST",
+            "WEST_NORTHWEST",
+            "NORTHWEST",
+            "NORTH_NORTHWEST"
+          ],
+          "enumDescriptions": [
+            "The cardinal direction is unspecified.",
+            "The north cardinal direction.",
+            "The north-northeast secondary intercardinal direction.",
+            "The northeast intercardinal direction.",
+            "The east-northeast secondary intercardinal direction.",
+            "The east cardinal direction.",
+            "The east-southeast secondary intercardinal direction.",
+            "The southeast intercardinal direction.",
+            "The south-southeast secondary intercardinal direction.",
+            "The south cardinal direction.",
+            "The south-southwest secondary intercardinal direction.",
+            "The southwest intercardinal direction.",
+            "The west-southwest secondary intercardinal direction.",
+            "The west cardinal direction.",
+            "The west-northwest secondary intercardinal direction.",
+            "The northwest intercardinal direction.",
+            "The north-northwest secondary intercardinal direction."
+          ],
+          "type": "string"
+        },
+        "degrees": {
+          "description": "The direction of the wind in degrees (values from 0 to 360).",
+          "format": "int32",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "WindSpeed": {
+      "description": "Represents the speed of the wind.",
+      "id": "WindSpeed",
+      "properties": {
+        "unit": {
+          "description": "Optional. The code that represents the unit used to measure the wind speed.",
+          "enum": [
+            "UNIT_UNSPECIFIED",
+            "KILOMETERS_PER_HOUR",
+            "MILES_PER_HOUR"
+          ],
+          "enumDescriptions": [
+            "The speed unit is unspecified.",
+            "The speed is measured in kilometers per hour.",
+            "The speed is measured in miles per hour."
+          ],
+          "type": "string"
+        },
+        "value": {
+          "description": "The value of the wind speed.",
+          "format": "float",
+          "type": "number"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "servicePath": "",
+  "version": "v1"
+}

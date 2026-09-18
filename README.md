@@ -119,6 +119,18 @@ try {
 }
 ```
 
+## Contract tests
+
+Every unit test sends its request through a stub `fetch` that checks the final URL, query string and JSON body against the Google Discovery document pinned under `test/discovery/`. Unknown body fields, undefined enum values, undeclared query parameters and wrong scalar types fail the test. The check covers requests only: responses, `oneof` exclusivity and semantic limits are outside it.
+
+Seven documents are pinned. Routes and Geocoding v4 refuse anonymous Discovery requests, so their tests run without the check until someone fetches those two documents once with a key:
+
+```bash
+GOOGLE_MAPS_API_KEY=... npm run discovery:fetch -- routes geocode
+```
+
+The key travels in a header and is not recorded. A weekly workflow refetches the pinned documents and opens an issue when a method, parameter, request field or enum changes.
+
 ## Status
 
 Version 0.1.0. The API surface may change before 1.0. Nothing here has run against a production workload yet.

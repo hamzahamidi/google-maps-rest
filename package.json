@@ -173,13 +173,17 @@
     "prepublishOnly": "npm run typecheck && npm run test && npm run build",
     "coverage": "vitest run --coverage",
     "semantic-release": "semantic-release",
-    "check:package": "publint --strict && attw --pack ."
+    "check:package": "publint --strict && attw --pack .",
+    "discovery:fetch": "node scripts/discovery-fetch.mjs",
+    "discovery:diff": "node scripts/discovery-diff.mjs"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",
     "@semantic-release/github": "^12.0.9",
     "@semantic-release/npm": "^13.1.5",
+    "@types/node": "^22.20.3",
     "@vitest/coverage-v8": "^3.2.7",
+    "ajv": "^8.20.0",
     "publint": "^0.3.14",
     "semantic-release": "^25.0.9",
     "tsup": "^8.5.0",

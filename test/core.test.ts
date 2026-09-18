@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { MapsClient, toSearchParams } from '../src/core/client.js';
 import { MapsAuthError, MapsInvalidRequestError, MapsQuotaError, MapsError } from '../src/core/errors.js';
-import { bodyOf, headerOf, rejection, stubClient } from './helpers.js';
+import { bodyOf, headerOf, rejection, rawStubClient } from './helpers.js';
 
 describe('toSearchParams', () => {
   it('flattens nested objects into dotted paths', () => {
@@ -27,7 +27,7 @@ describe('MapsClient', () => {
   });
 
   it('sends the key in the X-Goog-Api-Key header, never the query string', async () => {
-    const { client, calls } = stubClient();
+    const { client, calls } = rawStubClient();
     await client.request({ service: 'places', path: '/v1/places:searchText', method: 'POST', body: {} });
 
     expect(headerOf(calls[0]!, 'X-Goog-Api-Key')).toBe('test-key');
@@ -35,14 +35,14 @@ describe('MapsClient', () => {
   });
 
   it('resolves the origin from the service name', async () => {
-    const { client, calls } = stubClient();
+    const { client, calls } = rawStubClient();
     await client.request({ service: 'weather', path: '/v1/currentConditions:lookup', method: 'GET' });
 
     expect(calls[0]!.url).toContain('https://weather.googleapis.com/v1/currentConditions:lookup');
   });
 
   it('sets the field mask header only when fields are given', async () => {
-    const { client, calls } = stubClient();
+    const { client, calls } = rawStubClient();
     await client.request({ service: 'places', path: '/p', method: 'GET', fieldMask: ['id', 'location'] });
     await client.request({ service: 'places', path: '/p', method: 'GET', fieldMask: [] });
 
@@ -51,7 +51,7 @@ describe('MapsClient', () => {
   });
 
   it('sends a JSON body with a content type, and omits both when there is none', async () => {
-    const { client, calls } = stubClient();
+    const { client, calls } = rawStubClient();
     await client.request({ service: 'places', path: '/p', method: 'POST', body: { textQuery: 'pizza' } });
     await client.request({ service: 'places', path: '/p', method: 'GET' });
 
@@ -66,21 +66,21 @@ describe('error mapping', () => {
   const googleError = (status: string, message = 'boom') => ({ error: { status, message } });
 
   it('maps INVALID_ARGUMENT to MapsInvalidRequestError', async () => {
-    const { client } = stubClient({ status: 400, body: googleError('INVALID_ARGUMENT', 'bad mask') });
+    const { client } = rawStubClient({ status: 400, body: googleError('INVALID_ARGUMENT', 'bad mask') });
     await expect(client.request({ service: 'places', path: '/p', method: 'GET' }))
       .rejects.toThrowError(MapsInvalidRequestError);
   });
 
   it('maps PERMISSION_DENIED and UNAUTHENTICATED to MapsAuthError', async () => {
     for (const status of ['PERMISSION_DENIED', 'UNAUTHENTICATED']) {
-      const { client } = stubClient({ status: 403, body: googleError(status) });
+      const { client } = rawStubClient({ status: 403, body: googleError(status) });
       await expect(client.request({ service: 'places', path: '/p', method: 'GET' }))
         .rejects.toThrowError(MapsAuthError);
     }
   });
 
   it('maps RESOURCE_EXHAUSTED to a retryable quota error', async () => {
-    const { client } = stubClient({ status: 429, body: googleError('RESOURCE_EXHAUSTED') });
+    const { client } = rawStubClient({ status: 429, body: googleError('RESOURCE_EXHAUSTED') });
     const error = await rejection<MapsQuotaError>(
       client.request({ service: 'places', path: '/p', method: 'GET' }),
     );
@@ -90,13 +90,13 @@ describe('error mapping', () => {
   });
 
   it('keeps the message Google sent', async () => {
-    const { client } = stubClient({ status: 400, body: googleError('INVALID_ARGUMENT', 'API key not valid.') });
+    const { client } = rawStubClient({ status: 400, body: googleError('INVALID_ARGUMENT', 'API key not valid.') });
     await expect(client.request({ service: 'places', path: '/p', method: 'GET' }))
       .rejects.toThrow('API key not valid.');
   });
 
   it('falls back to the http status when the body carries no error object', async () => {
-    const { client } = stubClient({ status: 503, body: {} });
+    const { client } = rawStubClient({ status: 503, body: {} });
     const error = await rejection<MapsError>(
       client.request({ service: 'places', path: '/p', method: 'GET' }),
     );
@@ -106,7 +106,7 @@ describe('error mapping', () => {
   });
 
   it('narrows an unlisted status instead of letting it escape the union', async () => {
-    const { client } = stubClient({ status: 400, body: { error: { status: 'SOMETHING_NEW', message: 'x' } } });
+    const { client } = rawStubClient({ status: 400, body: { error: { status: 'SOMETHING_NEW', message: 'x' } } });
     const error = await rejection<MapsError>(client.request({ service: 'places', path: '/p', method: 'GET' }));
 
     expect(error.status).toBe('INVALID_ARGUMENT');
@@ -114,7 +114,7 @@ describe('error mapping', () => {
   });
 
   it('carries canonical codes that are not in the http fallback table', async () => {
-    const { client } = stubClient({ status: 400, body: { error: { status: 'FAILED_PRECONDITION', message: 'x' } } });
+    const { client } = rawStubClient({ status: 400, body: { error: { status: 'FAILED_PRECONDITION', message: 'x' } } });
     const error = await rejection<MapsError>(client.request({ service: 'places', path: '/p', method: 'GET' }));
 
     expect(error.status).toBe('FAILED_PRECONDITION');

@@ -1,0 +1,58 @@
+{
+  "addressvalidation.json": {
+    "fetchedAt": "2026-09-18T08:47:56.672Z",
+    "name": "addressvalidation",
+    "revision": "20260916",
+    "sha256": "22a64fb451d37b5f466656be5efe9aabbbd569bb573c8c93a6347854392635e3",
+    "source": "https://addressvalidation.googleapis.com/$discovery/rest?version=v1",
+    "version": "v1"
+  },
+  "airquality.json": {
+    "fetchedAt": "2026-09-18T08:47:57.324Z",
+    "name": "airquality",
+    "revision": "20260916",
+    "sha256": "9a8ae0598d4af7277aacfb393114717e0284916415937577a3d8515ebf452933",
+    "source": "https://airquality.googleapis.com/$discovery/rest?version=v1",
+    "version": "v1"
+  },
+  "areainsights.json": {
+    "fetchedAt": "2026-09-18T08:47:59.428Z",
+    "name": "areainsights",
+    "revision": "20260916",
+    "sha256": "a7f24a3cf02bb4c057a03c759a68d0191ac1472a7a62e570b4c6bd74a291b935",
+    "source": "https://areainsights.googleapis.com/$discovery/rest?version=v1",
+    "version": "v1"
+  },
+  "places.json": {
+    "fetchedAt": "2026-09-18T08:49:39.690Z",
+    "name": "places",
+    "revision": "20260916",
+    "sha256": "926b17559c9d9258a3c96a2d02f4cef1f0c7045b8b745b1c466fbdcd90c77e68",
+    "source": "https://places.googleapis.com/$discovery/rest?version=v1",
+    "version": "v1"
+  },
+  "pollen.json": {
+    "fetchedAt": "2026-09-18T08:47:57.990Z",
+    "name": "pollen",
+    "revision": "20260916",
+    "sha256": "848e8329722a2f93efac22f5b7ecf58d216821b5a119ea40af34713d930e3ed8",
+    "source": "https://pollen.googleapis.com/$discovery/rest?version=v1",
+    "version": "v1"
+  },
+  "solar.json": {
+    "fetchedAt": "2026-09-18T08:47:58.725Z",
+    "name": "solar",
+    "revision": "20260914",
+    "sha256": "74ba791437dd93bc0e1bea438dce330647264209e8909bd19983022019bc4e50",
+    "source": "https://solar.googleapis.com/$discovery/rest?version=v1",
+    "version": "v1"
+  },
+  "weather.json": {
+    "fetchedAt": "2026-09-18T08:47:56.467Z",
+    "name": "weather",
+    "revision": "20260916",
+    "sha256": "fce9f06b79d67fed669ce826ee1eb16afbca9393b53b1035c8a6dd44c70b08b2",
+    "source": "https://weather.googleapis.com/$discovery/rest?version=v1",
+    "version": "v1"
+  }
+}
