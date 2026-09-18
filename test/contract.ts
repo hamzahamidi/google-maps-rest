@@ -98,11 +98,11 @@ function escapeRegExp(text: string): string {
   return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-/** Discovery's `path` uses reserved expansion such as `v1/{+name}`; `flatPath` spells the segments out. */
+/** `{var}` binds one segment; `{+var}` is RFC 6570 reserved expansion and may span several. */
 function compilePattern(route: string): RegExp {
   const source = route
     .split(/(\{[^}]+\})/)
-    .map((part) => (part.startsWith('{') ? '[^/]+' : escapeRegExp(part)))
+    .map((part) => (part.startsWith('{+') ? '.+' : part.startsWith('{') ? '[^/]+' : escapeRegExp(part)))
     .join('');
   return new RegExp(`^/${source}$`);
 }
@@ -122,7 +122,7 @@ export function compileContract(document: DiscoveryDocument): Contract {
   const definitions = Object.fromEntries(
     Object.entries(document.schemas ?? {}).map(([name, schema]) => [name, toJsonSchema(schema)]),
   );
-  const ajv = new Ajv({ allErrors: true, strict: false });
+  const ajv = new Ajv({ allErrors: true, strict: true, validateFormats: false });
   const methods: CompiledMethod[] = [];
   for (const method of walkMethods(document)) {
     const route = method.flatPath ?? method.path;
@@ -154,11 +154,13 @@ function describeAjvErrors(validate: ValidateFunction): string {
     .join('; ');
 }
 
+const DECIMAL = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/;
+
 function checkScalar(id: string, name: string, parameter: DiscoveryParameter, value: string): void {
   const fail = (expected: string) => new ContractError(`${id}: query parameter "${name}" expects ${expected}, got "${value}"`);
   if (parameter.enum && !parameter.enum.includes(value)) throw fail(`one of ${parameter.enum.join(', ')}`);
   if (parameter.type === 'integer' && !/^-?\d+$/.test(value)) throw fail('an integer');
-  if (parameter.type === 'number' && !Number.isFinite(Number(value))) throw fail('a number');
+  if (parameter.type === 'number' && !DECIMAL.test(value)) throw fail('a number');
   if (parameter.type === 'boolean' && value !== 'true' && value !== 'false') throw fail('a boolean');
 }
 

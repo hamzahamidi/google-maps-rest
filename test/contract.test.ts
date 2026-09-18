@@ -44,6 +44,14 @@ describe('pinned documents', () => {
     ]);
   });
 
+  it('leave exactly routes and geocode unpinned', () => {
+    const services = readdirSync(join(DISCOVERY_DIR, '..', '..', 'src'), { withFileTypes: true })
+      .filter((entry) => entry.isDirectory() && entry.name !== 'core')
+      .map((entry) => entry.name);
+    const unpinned = services.filter((service) => !contracts.has(`${service}.googleapis.com`)).sort();
+    expect(unpinned).toEqual(['geocode', 'routes']);
+  });
+
   it('match the manifest byte for byte', () => {
     const manifest = JSON.parse(readFileSync(join(DISCOVERY_DIR, 'manifest.json'), 'utf8')) as Record<
       string,
@@ -145,6 +153,16 @@ describe('method matching', () => {
     );
   });
 
+  it('lets reserved expansion span segments when a method has no flatPath', () => {
+    const reserved = synthetic({
+      methods: { a: { id: 'synthetic.a', httpMethod: 'GET', path: 'v1/{+name}/media' } },
+    });
+    expect(() => validateWireRequest('https://synthetic.googleapis.com/v1/places/x/photos/y/media', { method: 'GET' }, reserved)).not.toThrow();
+    expect(() => validateWireRequest('https://synthetic.googleapis.com/v1/places/x/photos/y', { method: 'GET' }, reserved)).toThrow(
+      /matches no method/,
+    );
+  });
+
   it('walks nested resources', () => {
     expect(() =>
       validateWireRequest('https://weather.googleapis.com/v1/forecast/days:lookup?location.latitude=1&location.longitude=2', {
@@ -173,10 +191,15 @@ describe('query parameters', () => {
     );
   });
 
-  it('rejects a non-numeric value for a number', () => {
-    expect(() => validateWireRequest(`${lookup}?location.latitude=abc&location.longitude=2`, get)).toThrow(
-      '"location.latitude" expects a number, got "abc"',
-    );
+  it('accepts only decimal syntax for a number', () => {
+    for (const bad of ['abc', '', '0x10', '1.', '.5', 'Infinity']) {
+      expect(() => validateWireRequest(`${lookup}?location.latitude=${bad}&location.longitude=2`, get), bad).toThrow(
+        `"location.latitude" expects a number, got "${bad}"`,
+      );
+    }
+    for (const good of ['1', '-1.5', '0', '1e3', '4.2E-1']) {
+      expect(() => validateWireRequest(`${lookup}?location.latitude=${good}&location.longitude=2`, get), good).not.toThrow();
+    }
   });
 
   it('rejects a fraction for an integer', () => {
