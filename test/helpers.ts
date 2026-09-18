@@ -1,12 +1,14 @@
 import { MapsClient, type FetchLike } from '../src/core/client.js';
+import { validateWireRequest } from './contract.js';
 
 export type Captured = { url: string; init: RequestInit | undefined };
+export type StubResponse = { status?: number; body?: unknown };
+type Stub = { client: MapsClient; calls: Captured[] };
 
-export function stubClient(
-  respond: { status?: number; body?: unknown } = {},
-): { client: MapsClient; calls: Captured[] } {
+function build(respond: StubResponse, validate: (url: string, init: RequestInit | undefined) => void): Stub {
   const calls: Captured[] = [];
   const fetchImpl: FetchLike = async (url, init) => {
+    validate(url, init);
     calls.push({ url, init });
     return new Response(JSON.stringify(respond.body ?? {}), {
       status: respond.status ?? 200,
@@ -14,6 +16,16 @@ export function stubClient(
     });
   };
   return { client: new MapsClient({ apiKey: 'test-key', fetch: fetchImpl }), calls };
+}
+
+/** Every request is checked against the pinned Discovery document for its host before it is recorded. */
+export function stubClient(respond: StubResponse = {}): Stub {
+  return build(respond, validateWireRequest);
+}
+
+/** For transport tests that use invented paths, and for services with no pinned document yet. */
+export function rawStubClient(respond: StubResponse = {}): Stub {
+  return build(respond, () => undefined);
 }
 
 export function headerOf(call: Captured, name: string): string | undefined {

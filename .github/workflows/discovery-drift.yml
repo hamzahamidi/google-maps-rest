@@ -1,0 +1,54 @@
+name: Discovery drift
+
+on:
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Fetch the current documents for every pinned service
+        env:
+          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+        run: |
+          services=$(ls test/discovery/*.json | xargs -n1 basename | sed 's/\.json$//' | grep -v '^manifest$')
+          node scripts/discovery-fetch.mjs --out /tmp/discovery $services
+      - name: Compare with the committed documents
+        id: diff
+        run: |
+          set +e
+          node scripts/discovery-diff.mjs test/discovery /tmp/discovery > report.md
+          code=$?
+          set -e
+          cat report.md
+          if [ "$code" -eq 2 ]; then echo "drift=true" >> "$GITHUB_OUTPUT"; elif [ "$code" -ne 0 ]; then exit "$code"; fi
+      # Issues rather than a pull request: a PR opened with GITHUB_TOKEN triggers no CI run,
+      # and a refreshed document can need a converter or public API change before it merges.
+      - name: Open or update the drift issue
+        if: steps.diff.outputs.drift == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh label create discovery-drift --force --color D93F0B --description "Google Discovery document changed"
+          {
+            echo "Fetched $(date -u +%Y-%m-%d). Refresh with \`npm run discovery:fetch\` and review the converter and public types before committing."
+            echo
+            cat report.md
+          } > body.md
+          existing=$(gh issue list --label discovery-drift --state open --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body-file body.md
+          else
+            gh issue create --title "Discovery drift detected" --label discovery-drift --body-file body.md
+          fi

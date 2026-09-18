@@ -16,11 +16,11 @@ describe('solar', () => {
     const { client, calls } = stubClient({ body: {} });
     await findClosestBuildingInsights(client, {
       location: { latitude: 1, longitude: 2 },
-      experiments: ['EXPANDED_COVERAGE', 'OTHER'],
+      experiments: ['EXPANDED_COVERAGE', 'EXPERIMENT_UNSPECIFIED'],
     });
 
     const url = new URL(calls[0]!.url);
-    expect(url.searchParams.getAll('experiments')).toEqual(['EXPANDED_COVERAGE', 'OTHER']);
+    expect(url.searchParams.getAll('experiments')).toEqual(['EXPANDED_COVERAGE', 'EXPERIMENT_UNSPECIFIED']);
   });
 
   it('sends the data layer radius and view', async () => {

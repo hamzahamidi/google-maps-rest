@@ -3,7 +3,7 @@ import { autocomplete, billingTierFor, getPlace, searchNearby, searchText } from
 import { computeRouteMatrix, computeRoutes } from '../src/routes/index.js';
 import { geocodeAddress, geocodeLocation, geocodePlace } from '../src/geocode/index.js';
 import { currentConditions, forecastDays } from '../src/weather/index.js';
-import { bodyOf, headerOf, stubClient } from './helpers.js';
+import { bodyOf, headerOf, rawStubClient, stubClient } from './helpers.js';
 
 describe('places', () => {
   it('roots the search field mask at places., because results are nested there', async () => {
@@ -106,7 +106,7 @@ describe('billingTierFor', () => {
 
 describe('routes', () => {
   it('roots the mask at routes. and posts to the v2 path', async () => {
-    const { client, calls } = stubClient({ body: { routes: [] } });
+    const { client, calls } = rawStubClient({ body: { routes: [] } });
     await computeRoutes(client, {
       origin: { address: 'a' },
       destination: { address: 'b' },
@@ -119,7 +119,7 @@ describe('routes', () => {
   });
 
   it('leaves the matrix mask unrooted, because that response is a flat list', async () => {
-    const { client, calls } = stubClient({ body: [] });
+    const { client, calls } = rawStubClient({ body: [] });
     await computeRouteMatrix(client, {
       origins: [{ waypoint: { address: 'a' } }],
       destinations: [{ waypoint: { address: 'b' } }],
@@ -134,7 +134,7 @@ describe('routes', () => {
   // Without the indexes an element cannot be mapped back to its inputs, and without
   // status a failed element reads the same as one that simply has no route.
   it('always asks for the matrix diagnostic and index fields', async () => {
-    const { client, calls } = stubClient({ body: [] });
+    const { client, calls } = rawStubClient({ body: [] });
     await computeRouteMatrix(client, {
       origins: [{ waypoint: { address: 'a' } }],
       destinations: [{ waypoint: { address: 'b' } }],
@@ -146,7 +146,7 @@ describe('routes', () => {
   });
 
   it('does not duplicate a diagnostic field the caller already asked for', async () => {
-    const { client, calls } = stubClient({ body: [] });
+    const { client, calls } = rawStubClient({ body: [] });
     await computeRouteMatrix(client, {
       origins: [{ waypoint: { address: 'a' } }],
       destinations: [{ waypoint: { address: 'b' } }],
@@ -160,7 +160,7 @@ describe('routes', () => {
 
 describe('geocode v4', () => {
   it('sends the address query on the v4 path', async () => {
-    const { client, calls } = stubClient({ body: { results: [] } });
+    const { client, calls } = rawStubClient({ body: { results: [] } });
     await geocodeAddress(client, { addressQuery: '1600 Amphitheatre Parkway' });
 
     expect(calls[0]!.url).toContain('https://geocode.googleapis.com/v4/geocode/address');
@@ -168,7 +168,7 @@ describe('geocode v4', () => {
   });
 
   it('flattens the reverse lookup location into dotted params', async () => {
-    const { client, calls } = stubClient({ body: { results: [] } });
+    const { client, calls } = rawStubClient({ body: { results: [] } });
     await geocodeLocation(client, { location: { latitude: 37.42, longitude: -122.08 } });
 
     expect(calls[0]!.url).toContain('location.latitude=37.42');
@@ -177,7 +177,7 @@ describe('geocode v4', () => {
 
   // includeTypes is ignored rather than rejected, so the filter reads as applied.
   it('sends the reverse lookup type filter as types', async () => {
-    const { client, calls } = stubClient({ body: { results: [] } });
+    const { client, calls } = rawStubClient({ body: { results: [] } });
     await geocodeLocation(client, {
       location: { latitude: 1, longitude: 2 },
       types: ['street_address', 'premise'],
@@ -191,14 +191,14 @@ describe('geocode v4', () => {
   });
 
   it('accepts the lat,lng string form of the reverse lookup', async () => {
-    const { client, calls } = stubClient({ body: { results: [] } });
+    const { client, calls } = rawStubClient({ body: { results: [] } });
     await geocodeLocation(client, { locationQuery: '64.7611872,-18.4705364' });
 
     expect(calls[0]!.url).toContain('locationQuery=64.7611872%2C-18.4705364');
   });
 
   it('biases the address lookup by rectangle, the only form on the wire', async () => {
-    const { client, calls } = stubClient({ body: { results: [] } });
+    const { client, calls } = rawStubClient({ body: { results: [] } });
     await geocodeAddress(client, {
       addressQuery: 'rue de Rivoli',
       locationBias: { rectangle: { low: { latitude: 48.8, longitude: 2.3 }, high: { latitude: 48.9, longitude: 2.4 } } },
@@ -209,7 +209,7 @@ describe('geocode v4', () => {
   });
 
   it('accepts a structured postal address instead of a query string', async () => {
-    const { client, calls } = stubClient({ body: { results: [] } });
+    const { client, calls } = rawStubClient({ body: { results: [] } });
     await geocodeAddress(client, { address: { regionCode: 'FR', addressLines: ['1 rue de Rivoli'] } });
 
     expect(calls[0]!.url).toContain('address.regionCode=FR');
@@ -217,7 +217,7 @@ describe('geocode v4', () => {
   });
 
   it('strips the resource prefix from a place lookup', async () => {
-    const { client, calls } = stubClient({ body: { results: [] } });
+    const { client, calls } = rawStubClient({ body: { results: [] } });
     await geocodePlace(client, { placeId: 'places/xyz' });
 
     expect(calls[0]!.url).toContain('/v4/geocode/places/xyz');
@@ -254,7 +254,7 @@ describe('weather', () => {
 
 describe('field masks never reach the query string', () => {
   it('keeps fieldMask out of a GET url even when a request type grows one', async () => {
-    const { client, calls } = stubClient({ body: { results: [] } });
+    const { client, calls } = rawStubClient({ body: { results: [] } });
     const request = { addressQuery: 'x', fieldMask: ['location'] } as Parameters<typeof geocodeAddress>[1];
     await geocodeAddress(client, request);
 
