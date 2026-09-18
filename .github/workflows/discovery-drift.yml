@@ -11,7 +11,12 @@ permissions:
 
 jobs:
   diff:
+    # A manual dispatch can pick any branch once the workflow exists, and this job holds a secret.
+    if: github.event_name == 'schedule' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -32,13 +37,10 @@ jobs:
           set -e
           cat report.md
           if [ "$code" -eq 2 ]; then echo "drift=true" >> "$GITHUB_OUTPUT"; elif [ "$code" -ne 0 ]; then exit "$code"; fi
-      # Issues rather than a pull request: a PR opened with GITHUB_TOKEN triggers no CI run,
+      # An issue rather than a pull request: a PR opened with GITHUB_TOKEN triggers no CI run,
       # and a refreshed document can need a converter or public API change before it merges.
       - name: Open or update the drift issue
         if: steps.diff.outputs.drift == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
         run: |
           gh label create discovery-drift --force --color D93F0B --description "Google Discovery document changed"
           {
@@ -48,7 +50,13 @@ jobs:
           } > body.md
           existing=$(gh issue list --label discovery-drift --state open --json number --jq '.[0].number')
           if [ -n "$existing" ]; then
-            gh issue comment "$existing" --body-file body.md
+            gh issue edit "$existing" --body-file body.md
           else
             gh issue create --title "Discovery drift detected" --label discovery-drift --body-file body.md
           fi
+      - name: Close the drift issue once the pinned documents match again
+        if: steps.diff.outputs.drift != 'true'
+        run: |
+          for number in $(gh issue list --label discovery-drift --state open --json number --jq '.[].number'); do
+            gh issue close "$number" --comment "The pinned documents match upstream as of $(date -u +%Y-%m-%d)."
+          done
