@@ -8,7 +8,7 @@
 
 Google's new Maps APIs each ship their own npm package, and every one is generated on `google-gax`. gRPC is the default transport in Node, and the install carries `@grpc/grpc-js`, `protobufjs` and `google-auth-library`: 36 MB for one API.
 
-Every one of these APIs is REST/JSON over HTTPS, and every RPC declares its own REST route in Google's public service definitions. This package calls those routes directly. 56 kB, no runtime dependencies.
+Every one of these APIs is REST/JSON over HTTPS, and every RPC declares its own REST route in Google's public service definitions. This package calls those routes directly. 108 kB unpacked for all nine APIs, no runtime dependencies.
 
 ```bash
 npm install google-maps-rest
@@ -19,9 +19,9 @@ Node 18 or later, or any runtime with a global `fetch`.
 | | install size | runtime deps |
 |---|---|---|
 | `@googlemaps/places` | 36 MB, 66 packages | `google-gax` |
-| `google-maps-rest` | 56 kB unpacked, 13 kB packed | none |
+| `google-maps-rest` | 108 kB unpacked, 27 kB packed | none |
 
-Sizes are local `node_modules` after `npm install --omit=dev`, measured 2026-09-17. They are not container image deltas.
+The `@googlemaps/places` figure is local `node_modules` after `npm install --omit=dev`; the `google-maps-rest` figures are `npm pack` output. Both measured 2026-09-18. Neither is a container image delta.
 
 ## Usage
 
@@ -50,13 +50,47 @@ if (first?.id) {
 }
 ```
 
-Each API is a subpath import, so you only bundle what you call.
+Each API is a subpath import, so you only bundle what you call. The package ships ESM and CommonJS builds with their own type declarations, and `typesVersions` covers `moduleResolution: "node"`.
 
 ```ts
 import { computeRoutes } from 'google-maps-rest/routes';
 import { geocodeAddress } from 'google-maps-rest/geocode';
 import { currentConditions } from 'google-maps-rest/weather';
 ```
+
+## Client options
+
+```ts
+const client = createClient({
+  apiKey: process.env.GOOGLE_MAPS_API_KEY!,
+  timeoutMs: 5_000,          // default 10_000, applied per call
+  fetch: myFetch,            // any fetch-compatible function; default is globalThis.fetch
+  resolveOrigin: (service) => `https://${service}.googleapis.com`, // proxies and tests
+});
+```
+
+Every call takes an optional `{ signal }` as its last argument. The caller's signal is joined with the timeout, so either one aborts the request.
+
+```ts
+const controller = new AbortController();
+const places = searchText(client, { textQuery: 'pizza', fieldMask: ['id'] }, { signal: controller.signal });
+```
+
+## Pagination
+
+Calls that page (`searchText`, the weather forecasts and history, Air Quality `forecast` and `history`, Pollen `forecast`) take `pageSize` and `pageToken` and return `nextPageToken`. There is no iterator: pass the token back until it is absent.
+
+```ts
+let pageToken: string | undefined;
+do {
+  const page = await searchText(client, { textQuery: 'bakery', fieldMask: ['id'], pageSize: 20, pageToken });
+  pageToken = page.nextPageToken;
+} while (pageToken);
+```
+
+## 64-bit integers
+
+ProtoJSON encodes int64 as a decimal string because it overflows a JavaScript number. Fields such as Area Insights `count`, Routes `fuelConsumptionMicroliters` and every `Money.units` are typed `Int64String` and arrive as strings. Convert with `BigInt(value)` when you need arithmetic.
 
 ## Field masks
 
