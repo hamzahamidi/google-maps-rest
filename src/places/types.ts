@@ -103,8 +103,6 @@ export type SearchTextRequest = {
   minRating?: number;
   pageSize?: number;
   pageToken?: string;
-  /** @deprecated Google deprecated this in favour of pageSize, and ignores it when both are set. */
-  maxResultCount?: number;
   priceLevels?: string[];
   rankPreference?: 'RELEVANCE' | 'DISTANCE';
   locationBias?: LocationBias;
