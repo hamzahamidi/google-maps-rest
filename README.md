@@ -5,6 +5,7 @@
 [![npm](https://img.shields.io/npm/v/google-maps-rest)](https://www.npmjs.com/package/google-maps-rest)
 [![install size](https://packagephobia.com/badge?p=google-maps-rest)](https://packagephobia.com/result?p=google-maps-rest)
 [![License](https://img.shields.io/npm/l/google-maps-rest)](LICENSE)
+[![Sponsor](https://img.shields.io/badge/sponsor-GitHub%20Sponsors-EA4AAA?logo=githubsponsors)](https://github.com/sponsors/hamzahamidi)
 
 Google's new Maps APIs each ship their own npm package, and every one is generated on `google-gax`. gRPC is the default transport in Node, and the install carries `@grpc/grpc-js`, `protobufjs` and `google-auth-library`: 36 MB for one API.
 
