@@ -12,11 +12,13 @@ permissions:
   pull-requests: write
   id-token: write
 
-# Two jobs rather than one, because they need different gating. The dry run stays
+# Three jobs rather than one, because they need different gating. The dry run stays
 # ungated or every pull request would wait on a human to learn whether its
-# configuration parses. The publish is gated, because a push to main publishes to
-# npm irreversibly: unpublishing is limited to 72 hours and only while nothing
-# depends on the version.
+# configuration parses. The plan is ungated and decides, with the same commit
+# analysis the publish uses, whether a push to main releases anything at all, so a
+# chore or docs merge never parks a run at the gate. The publish is gated, because
+# a push to main publishes to npm irreversibly: unpublishing is limited to 72 hours
+# and only while nothing depends on the version.
 jobs:
   dry-run:
     name: Dry run
@@ -38,9 +40,32 @@ jobs:
       # configuration and plugin errors only. It does not prove OIDC publishing works.
       - run: npx semantic-release --dry-run
 
+  plan:
+    name: Plan
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    outputs:
+      release: ${{ steps.plan.outputs.release }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # semantic-release verifies push access with a git dry-run push even in dry-run
+      # mode, so the token is needed here although nothing is pushed.
+      - id: plan
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/release-plan.mjs
+
   release:
     name: Release
-    if: github.event_name == 'push'
+    needs: plan
+    if: github.event_name == 'push' && needs.plan.outputs.release == 'true'
     runs-on: ubuntu-latest
     # This name must exist as an environment with required reviewers under
     # Settings, Environments. GitHub creates an unprotected environment on first
