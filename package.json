@@ -32,6 +32,7 @@
   },
   "homepage": "https://github.com/hamzahamidi/google-maps-rest#readme",
   "bugs": "https://github.com/hamzahamidi/google-maps-rest/issues",
+  "funding": "https://github.com/sponsors/hamzahamidi",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
