@@ -1,7 +1,7 @@
 # google-maps-rest
 
 [![CI](https://github.com/hamzahamidi/google-maps-rest/actions/workflows/ci.yml/badge.svg)](https://github.com/hamzahamidi/google-maps-rest/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/hamzahamidi/google-maps-rest/branch/main/graph/badge.svg)](https://codecov.io/gh/hamzahamidi/google-maps-rest)
+[![SonarQube Cloud coverage](https://sonarcloud.io/api/project_badges/measure?project=hamzahamidi_google-maps-rest&metric=coverage)](https://sonarcloud.io/summary/new_code?id=hamzahamidi_google-maps-rest)
 [![npm](https://img.shields.io/npm/v/google-maps-rest)](https://www.npmjs.com/package/google-maps-rest)
 [![install size](https://packagephobia.com/badge?p=google-maps-rest)](https://packagephobia.com/result?p=google-maps-rest)
 [![License](https://img.shields.io/npm/l/google-maps-rest)](LICENSE)
