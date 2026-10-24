@@ -5,7 +5,10 @@
       "@semantic-release/commit-analyzer",
       {
         "preset": "angular",
-        "releaseRules": [{ "scope": "/.skip ci/", "release": false }],
+        "releaseRules": [
+          { "type": "docs", "scope": "readme", "release": "patch" },
+          { "scope": "/.skip ci/", "release": false }
+        ],
         "parserOpts": {
           "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"]
         }
