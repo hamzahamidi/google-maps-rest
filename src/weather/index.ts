@@ -27,19 +27,17 @@ export type CurrentConditions = {
   [key: string]: unknown;
 };
 
-type LookupBase = {
+export type CurrentConditionsRequest = {
   location: LatLng;
   languageCode?: string;
   unitsSystem?: UnitsSystem;
 };
 
-export type CurrentConditionsRequest = LookupBase;
+export type ForecastDaysRequest = CurrentConditionsRequest & { days?: number; pageSize?: number; pageToken?: string };
 
-export type ForecastDaysRequest = LookupBase & { days?: number; pageSize?: number; pageToken?: string };
+export type ForecastHoursRequest = CurrentConditionsRequest & { hours?: number; pageSize?: number; pageToken?: string };
 
-export type ForecastHoursRequest = LookupBase & { hours?: number; pageSize?: number; pageToken?: string };
-
-export type HistoryHoursRequest = LookupBase & { hours?: number; pageSize?: number; pageToken?: string };
+export type HistoryHoursRequest = CurrentConditionsRequest & { hours?: number; pageSize?: number; pageToken?: string };
 
 export type ForecastDaysResponse = {
   forecastDays?: unknown[];
