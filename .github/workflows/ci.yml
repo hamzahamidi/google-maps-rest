@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write
     strategy:
       # Report every leg. With the default fail-fast, one leg failing cancels the
       # others mid-step, which hides whether the remaining versions are healthy.
@@ -19,6 +18,8 @@ jobs:
         node: [18, 20, 22]
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
@@ -31,11 +32,8 @@ jobs:
       # source, not the built package. publint and attw resolve the packed tarball the
       # way a consumer would, which is the only place a broken exports map shows up.
       - run: npm run check:package
-      - name: Upload coverage to Codecov
-        # Fork pull requests receive no id-token, so an OIDC upload from them can only fail.
+      - name: Analyze with SonarQube Cloud
         if: matrix.node == 22 && (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository)
-        uses: codecov/codecov-action@v5
-        with:
-          use_oidc: true
-          files: ./coverage/lcov.info
-          fail_ci_if_error: true
+        uses: SonarSource/sonarqube-scan-action@d209202bc7d53ff1cc128f7f907dac145c9d6ae9 # v8.3.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
