@@ -32,7 +32,7 @@ const ENTERPRISE = [
   'transitStation',
   'userRatingCount',
   'websiteUri',
-];
+] as const;
 
 const ATMOSPHERE = [
   'allowsDogs',
@@ -69,9 +69,9 @@ const ATMOSPHERE = [
   'servesVegetarianFood',
   'servesWine',
   'takeout',
-];
+] as const;
 
-const DETAILS_IDS_ONLY = ['attributions', 'consumerAlert', 'id', 'movedPlace', 'movedPlaceId', 'name', 'photos'];
+const DETAILS_IDS_ONLY = ['attributions', 'consumerAlert', 'id', 'movedPlace', 'movedPlaceId', 'name', 'photos'] as const;
 
 const DETAILS_ESSENTIALS = [
   'addressComponents',
@@ -84,7 +84,7 @@ const DETAILS_ESSENTIALS = [
   'shortFormattedAddress',
   'types',
   'viewport',
-];
+] as const;
 
 const DETAILS_PRO = [
   'accessibilityOptions',
@@ -103,7 +103,7 @@ const DETAILS_PRO = [
   'subDestinations',
   'timeZone',
   'utcOffsetMinutes',
-];
+] as const;
 
 const SEARCH_PRO = [
   ...DETAILS_ESSENTIALS,
@@ -156,13 +156,13 @@ function bare(field: string): string {
 /** The highest tier present is billed for the whole call; a wildcard bills at the top. */
 export function billingTierFor(
   method: PlacesMethod,
-  fieldMask: readonly (string & {})[] | readonly string[],
+  fieldMask: readonly string[],
 ): BillingEstimate {
   const table = TABLES[method];
   const tiers = TIER_ORDER.filter((tier) => table[tier]);
 
   if (fieldMask.some((field) => bare(field) === '*')) {
-    return { tier: tiers[tiers.length - 1] ?? null, unclassified: [] };
+    return { tier: tiers.at(-1) ?? null, unclassified: [] };
   }
 
   let highest = -1;

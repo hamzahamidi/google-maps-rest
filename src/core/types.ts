@@ -11,7 +11,7 @@ export type Rectangle = { low: LatLng; high: LatLng };
 /** Accepts documented values with completion, and any string so a new one never blocks an upgrade. */
 export type Open<T extends string> = T | (string & {});
 
-/** ProtoJSON encodes 64-bit integers as decimal strings, since they overflow a JS number. */
-export type Int64String = string;
+/** Public name for ProtoJSON's decimal-string representation of 64-bit integers. */
+export type Int64String = string; // NOSONAR
 
 export type Money = { currencyCode?: string; units?: Int64String; nanos?: number };

@@ -20,7 +20,7 @@ export type CustomLocalAqi = { regionCode?: string; aqi?: string };
 
 export type Interval = { startTime?: string; endTime?: string };
 
-type LookupBase = {
+export type CurrentConditionsRequest = {
   location: LatLng;
   universalAqi?: boolean;
   customLocalAqis?: CustomLocalAqi[];
@@ -29,9 +29,7 @@ type LookupBase = {
   languageCode?: string;
 };
 
-export type CurrentConditionsRequest = LookupBase;
-
-export type ForecastRequest = LookupBase & {
+export type ForecastRequest = CurrentConditionsRequest & {
   /** Either a single dateTime or a period, not both. */
   dateTime?: string;
   period?: Interval;
@@ -39,7 +37,7 @@ export type ForecastRequest = LookupBase & {
   pageToken?: string;
 };
 
-export type HistoryRequest = LookupBase & {
+export type HistoryRequest = CurrentConditionsRequest & {
   dateTime?: string;
   period?: Interval;
   hours?: number;
