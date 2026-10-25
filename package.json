@@ -194,13 +194,12 @@
     "@semantic-release/github": "^12.0.9",
     "@semantic-release/npm": "^13.2.0",
     "@types/node": "^26.6.5",
-    "@typescript/typescript6": "^6.0.2",
     "@vitest/coverage-v8": "^5.0.5",
     "ajv": "^8.20.0",
     "publint": "^0.3.14",
     "semantic-release": "^25.0.9",
     "tsup": "^9.0.0",
-    "typescript": "^7.0.2",
+    "typescript": "^6.0.3",
     "vitest": "^5.0.5"
   }
 }
